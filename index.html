@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="ticker.css">
+  <title>Ticker Test</title>
+</head>
+
+<body>
+  <div id="stock-container">
+    <div id="stock1" class="stock-element">
+      <p id="stock1-name">Stock 1: </p>
+      <p id="stock1-price">12.56</p>
+    </div>
+    <div id="stock2" class="stock-element">
+      <p id="stock2-name">Stock 2: </p>
+      <p id="stock2-price">75.30</p>
+    </div>
+    <div id="stock3" class="stock-element">
+      <p id="stock3-name">Stock 3: </p>
+      <p id="stock3-price">261.17</p>
+    </div>
+    <div id="stock4" class="stock-element">
+      <p id="stock4-name">Stock 4: </p>
+      <p id="stock4-price">53.61</p>
+    </div>
+  </div>
+  <button id="end-round">End Round</button>
+  <div id="player-container">
+    <div class="player">
+      <p class="player-name" id="player1-name">Player 1</p><br>
+      <div class="player-stocks">
+        <div id="player1-stock1">Stock 1: <span id="player1-stock1-amount">13</span></div>
+        <div id="player1-stock2">Stock 2: <span id="player1-stock2-amount">13</span></div>
+        <div id="player1-stock3">Stock 3: <span id="player1-stock3-amount">13</span></div>
+        <div id="player1-stock4">Stock 4: <span id="player1-stock4-amount">13</span></div>
+      </div>
+      <div class="player1-buttons">
+        <button class="player1-stock1-buy">Buy</button><button class="player1-stock1-sell">Sell</button><br>
+        <button class="player1-stock2-buy">Buy</button><button class="player1-stock2-sell">Sell</button><br>
+        <button class="player1-stock3-buy">Buy</button><button class="player1-stock3-sell">Sell</button><br>
+        <button class="player1-stock4-buy">Buy</button><button class="player1-stock4-sell">Sell</button><br>
+      </div>
+      <div class="totals">
+        <p>Net Worth</p>
+        <p id="player1-networth">1234.50</p>
+      </div>
+      <div class="cash">
+        Buying Power
+        <p id="player1-cash">1234.50</p>
+      </div>
+    </div>
+    <div class="player">
+      <p class="player-name" id="player2-name">Player 2</p><br>
+      <div class="player-stocks">
+        <div id="player2-stock1">Stock 1: <span id="player2-stock1-amount">13</span></div>
+        <div id="player2-stock2">Stock 2: <span id="player2-stock2-amount">13</span></div>
+        <div id="player2-stock3">Stock 3: <span id="player2-stock3-amount">13</span></div>
+        <div id="player2-stock4">Stock 4: <span id="player2-stock4-amount">13</span></div>
+      </div>
+      <div class="player1-buttons">
+        <button class="player1-buy">Buy</button><button class="player1-sell">Sell</button><br>
+        <button class="player1-buy">Buy</button><button class="player1-sell">Sell</button><br>
+        <button class="player1-buy">Buy</button><button class="player1-sell">Sell</button><br>
+        <button class="player1-buy">Buy</button><button class="player1-sell">Sell</button><br>
+      </div>
+      <div class="totals">
+        <p>Net Worth</p>
+        <p>1234.50</p>
+      </div>
+      <div class="cash">
+        Buying Power
+        <p>1234.50</p>
+      </div>
+    </div>
+    <div class="player">
+      <p class="player-name">Player 3</p><br>
+      <div class="player-stocks">
+        <div class="player1-stock1">Stock 1</div>
+        <div class="player1-stock2">Stock 2</div>
+        <div class="player1-stock3">Stock 3</div>
+        <div class="player1-stock4">Stock 4</div>
+      </div>
+      <div class="player1-buttons">
+        <button class="player1-buy">Buy</button><button class="player1-sell">Sell</button><br>
+        <button class="player1-buy">Buy</button><button class="player1-sell">Sell</button><br>
+        <button class="player1-buy">Buy</button><button class="player1-sell">Sell</button><br>
+        <button class="player1-buy">Buy</button><button class="player1-sell">Sell</button><br>
+      </div>
+      <div class="totals">
+        <p>Net Worth</p>
+        <p>1234.55</p>
+      </div>
+      <div class="cash">
+        Buying Power
+        <p>1234.50</p>
+      </div>
+    </div>
+    <div class="player">
+      <p class="player-name">Player 4</p><br>
+      <div class="player-stocks">
+        <div class="player1-stock1">Stock 1</div>
+        <div class="player1-stock2">Stock 2</div>
+        <div class="player1-stock3">Stock 3</div>
+        <div class="player1-stock4">Stock 4</div>
+      </div>
+      <div class="player1-buttons">
+        <button class="player1-buy">Buy</button><button class="player1-sell">Sell</button><br>
+        <button class="player1-buy">Buy</button><button class="player1-sell">Sell</button><br>
+        <button class="player1-buy">Buy</button><button class="player1-sell">Sell</button><br>
+        <button class="player1-buy">Buy</button><button class="player1-sell">Sell</button><br>
+      </div>
+      <div class="totals">
+        <p>Net Worth</p>
+        <p>1234.50</p>
+      </div>
+      <div class="cash">
+        Buying Power
+        <p>1234.50</p>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="index.js">
+</script>
+
+</html>

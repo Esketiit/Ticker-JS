@@ -48,9 +48,9 @@ body {
   bottom: 0;
   /* my attempt at centering this damn div */
   margin-left: 10vw;
+  margin-bottom: 1vh;
   width: 80vw;
   height: 50vh;
-  padding: 10px;
 
   /* background-color: grey; */
   display: grid;

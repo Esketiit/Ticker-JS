@@ -91,9 +91,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   // Rolls new prices and increments round counter
   round_button.addEventListener("click", e => {
-    // garounds --
-    endRound()
-
+    console.log(endRound())
   })
 
   /* 
@@ -108,34 +106,35 @@ document.addEventListener("DOMContentLoaded", (event) => {
       {
         name: "Apple",
         ticker: "",
-        value: 10,
+        value: 15,
         sentiment: 50,
         volatility: 1
       }, 
       {
         name: "Essentia",
         ticker: "",
-        value: 50,
+        value: 75,
         sentiment: 80,
         volatility: 1
       },
       {
         name: "Microsoft",
         ticker: "",
-        value: 30,
+        value: 260,
         sentiment: 40,
         volatility: 1
       },
       {
         name: "Sony",
         ticker: "",
-        value: 20,
+        value: 120,
         sentiment: 50,
         volatility: 1
       }
     ]
   }
 
+  // basic random number function from stackoverflow
   let diceRoll = (min = 10, max = 100) => {
     let roll = Math.floor(Math.random() * (max - min + 1))
   
@@ -148,14 +147,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let direction = stock.sentiment < diceRoll() ? 1 : -1
 
     // Using direction and volatility, calculate the new value of the stock
-    return 5 * volatility * direction
+    // console.log(stock.value, stock.sentiment, stock.volatility, direction)
+    let newValue  = stock.value - (5 * stock.volatility * direction)
+    return newValue
   }
 
-  let endRound = (stocks) => {
-    stocks.map((stock) => {
+  function endRound () {
+    // Iterate through an array of objects holding each stocks value
+    let newStockValues = gameInfo.stockValues.map((stock) => {
+      // For each stock, take its current value, 
+      // calculate its new value, then update the stock
       stock.value = rollStock(stock)
       return stock
     })
+
+    return newStockValues
   }
-  
 })

@@ -27,7 +27,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
     stock4: {
       name: document.getElementsByClassName("stock4"),
       price: document.getElementById("stock4-price")
-    }
+    },
+    rounds: document.getElementById("rounds")
   }
 
   // These hold the ui elements for each player card.
@@ -87,10 +88,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
   }
 
   setStockNames("Apple", "Essentia", "Microsoft", "Twitch")
-  player1.name.innerText = "Brian"
-  player2.name.innerText = "John"
-  player3.name.innerText = "Kevin"
-  player4.name.innerText = "Nate"
 
   // Event listners 
 
@@ -139,7 +136,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     ],
     playerInfo: {
       player1: {
-        name: "Player1",
+        name: "Player 1",
         stock1: 0,
         stock2: 0,
         stock3: 0,
@@ -147,7 +144,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         cash: 1500
       },
       player2: {
-        name: "Player2",
+        name: "Player 2",
         stock1: 0,
         stock2: 0,
         stock3: 0,
@@ -155,7 +152,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         cash: 1500
       },
       player3: {
-        name: "Player3",
+        name: "Player 3",
         stock1: 0,
         stock2: 0,
         stock3: 0,
@@ -163,7 +160,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         cash: 1500
       },
       player4: {
-        name: "Player4",
+        name: "Player 4",
         stock1: 0,
         stock2: 0,
         stock3: 0,
@@ -189,9 +186,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
     gameUi.stock3.price.innerText = gameInfo.stockValues[2].value
     gameUi.stock4.price.innerText = gameInfo.stockValues[3].value
 
+    // update round counter
+    gameUi.rounds.innerText =`Rounds Left: ${gameInfo.rounds}`
+
     // Update player data on screen
 
     // Player 1
+    player1.name.innerText = gameInfo.playerInfo.player1.name
     player1.stock1.innerText = gameInfo.playerInfo.player1.stock1
     player1.stock2.innerText = gameInfo.playerInfo.player1.stock2
     player1.stock3.innerText = gameInfo.playerInfo.player1.stock3
@@ -199,6 +200,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     player1.cash.innerText = gameInfo.playerInfo.player1.cash
 
     // Player 2
+    player2.name.innerText = gameInfo.playerInfo.player2.name
     player2.stock1.innerText = gameInfo.playerInfo.player2.stock1
     player2.stock2.innerText = gameInfo.playerInfo.player2.stock2
     player2.stock3.innerText = gameInfo.playerInfo.player2.stock3
@@ -206,6 +208,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     player2.cash.innerText = gameInfo.playerInfo.player2.cash
 
     // Player 3
+    player3.name.innerText = gameInfo.playerInfo.player3.name
     player3.stock1.innerText = gameInfo.playerInfo.player3.stock1
     player3.stock2.innerText = gameInfo.playerInfo.player3.stock2
     player3.stock3.innerText = gameInfo.playerInfo.player3.stock3
@@ -213,6 +216,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     player3.cash.innerText = gameInfo.playerInfo.player3.cash
 
     // Player 4
+    player4.name.innerText = gameInfo.playerInfo.player4.name
     player4.stock1.innerText = gameInfo.playerInfo.player4.stock1
     player4.stock2.innerText = gameInfo.playerInfo.player4.stock2
     player4.stock3.innerText = gameInfo.playerInfo.player4.stock3
@@ -222,6 +226,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   // Rolls new values for every stock
   let rollStocks = () => {
+    gameInfo.rounds--
     // Iterate through an array of objects holding each stocks value
     let newStockValues = gameInfo.stockValues.map((stock) => {
       // For each stock, take its current value, 

@@ -73,12 +73,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   // Updates the name of each stock.
   let setStockNames = (name1="Stock 1", name2="Stock 2: ", name3="Stock 3: ", name4="Stock 4: ") => {
+    /*
+      gameUi.stock1.name is an array that holds element with the
+      stock1 class
+    */
     for (i = 0; i < gameUi.stock1.name.length; i++) {
       gameUi.stock1.name[i].innerText = `${name1}: `
       gameUi.stock2.name[i].innerText = `${name2}: `
       gameUi.stock3.name[i].innerText = `${name3}: `
       gameUi.stock4.name[i].innerText = `${name4}: `
     }
+    
   }
 
   setStockNames("Apple", "Essentia", "Microsoft", "Twitch")
@@ -91,7 +96,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
   // Rolls new prices and increments round counter
   round_button.addEventListener("click", e => {
-    console.log(endRound())
+    endRound()
   })
 
   /* 
@@ -131,16 +136,107 @@ document.addEventListener("DOMContentLoaded", (event) => {
         sentiment: 50,
         volatility: 1
       }
-    ]
+    ],
+    playerInfo: {
+      player1: {
+        name: "Player1",
+        stock1: 0,
+        stock2: 0,
+        stock3: 0,
+        stock4: 0,
+        cash: 1500
+      },
+      player2: {
+        name: "Player2",
+        stock1: 0,
+        stock2: 0,
+        stock3: 0,
+        stock4: 0,
+        cash: 1500
+      },
+      player3: {
+        name: "Player3",
+        stock1: 0,
+        stock2: 0,
+        stock3: 0,
+        stock4: 0,
+        cash: 1500
+      },
+      player4: {
+        name: "Player4",
+        stock1: 0,
+        stock2: 0,
+        stock3: 0,
+        stock4: 0,
+        cash: 1500
+      },
+    }
   }
 
-  // basic random number function from stackoverflow
-  let diceRoll = (min = 10, max = 100) => {
-    let roll = Math.floor(Math.random() * (max - min + 1))
-  
-    return roll
+  let endRound = () => {
+    rollStocks()
+    console.log(gameInfo.stockValues)
+
+    // Display new stock values
+    updateUi()
   }
 
+  // Updates all information on the screen
+  let updateUi = () => {
+    // Update stock prices on screen
+    gameUi.stock1.price.innerText = gameInfo.stockValues[0].value
+    gameUi.stock2.price.innerText = gameInfo.stockValues[1].value
+    gameUi.stock3.price.innerText = gameInfo.stockValues[2].value
+    gameUi.stock4.price.innerText = gameInfo.stockValues[3].value
+
+    // Update player data on screen
+
+    // Player 1
+    player1.stock1.innerText = gameInfo.playerInfo.player1.stock1
+    player1.stock2.innerText = gameInfo.playerInfo.player1.stock2
+    player1.stock3.innerText = gameInfo.playerInfo.player1.stock3
+    player1.stock4.innerText = gameInfo.playerInfo.player1.stock4
+    player1.cash.innerText = gameInfo.playerInfo.player1.cash
+
+    // Player 2
+    player2.stock1.innerText = gameInfo.playerInfo.player2.stock1
+    player2.stock2.innerText = gameInfo.playerInfo.player2.stock2
+    player2.stock3.innerText = gameInfo.playerInfo.player2.stock3
+    player2.stock4.innerText = gameInfo.playerInfo.player2.stock4
+    player2.cash.innerText = gameInfo.playerInfo.player2.cash
+
+    // Player 3
+    player3.stock1.innerText = gameInfo.playerInfo.player3.stock1
+    player3.stock2.innerText = gameInfo.playerInfo.player3.stock2
+    player3.stock3.innerText = gameInfo.playerInfo.player3.stock3
+    player3.stock4.innerText = gameInfo.playerInfo.player3.stock4
+    player3.cash.innerText = gameInfo.playerInfo.player3.cash
+
+    // Player 4
+    player4.stock1.innerText = gameInfo.playerInfo.player4.stock1
+    player4.stock2.innerText = gameInfo.playerInfo.player4.stock2
+    player4.stock3.innerText = gameInfo.playerInfo.player4.stock3
+    player4.stock4.innerText = gameInfo.playerInfo.player4.stock4
+    player4.cash.innerText = gameInfo.playerInfo.player4.cash
+  }
+
+  // Rolls new values for every stock
+  let rollStocks = () => {
+    // Iterate through an array of objects holding each stocks value
+    let newStockValues = gameInfo.stockValues.map((stock) => {
+      // For each stock, take its current value, 
+      // calculate its new value, then update the stock
+      stock.value = rollStock(stock)
+      return stock
+    })
+
+    // Update gameInfo with new values
+    gameInfo.stockValues = newStockValues
+
+    return newStockValues
+  }
+
+  // Rolls new values for a single stock
   let rollStock = (stock = {value, sentiment, volatility}) => {
     // If diceRoll returns a number higher than sentiment, direction is set to -1
     // and 1 if the oposite is true
@@ -152,15 +248,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
     return newValue
   }
 
-  function endRound () {
-    // Iterate through an array of objects holding each stocks value
-    let newStockValues = gameInfo.stockValues.map((stock) => {
-      // For each stock, take its current value, 
-      // calculate its new value, then update the stock
-      stock.value = rollStock(stock)
-      return stock
-    })
-
-    return newStockValues
-  }
+    // basic random number function from stackoverflow
+    let diceRoll = (min = 10, max = 100) => {
+      let roll = Math.floor(Math.random() * (max - min + 1))
+    
+      return roll
+    }
 })

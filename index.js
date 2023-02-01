@@ -123,6 +123,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   */
 	let gameInfo = {
 		rounds: 20,
+		// stockValues should probably be an object. 
 		stockValues: [
 			{
 				name: "Apple",
@@ -189,17 +190,37 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		},
 	}
 
+	// handles the logic for buying stock
+	// args example: (player1, stock1)
 	let playerBuy = (player, stock) => {
-		// figure out the player has enough cash
-		if (gameInfo.playerInfo[transactionInfo[0]].cash >= gameInfo.stockValues[transactionInfo[1]].value) {
-			gameInfo.playerInfo[transactionInfo[0]][transactionInfo[1]]++;
+		console.log(player, stock)
+		/* figure out which stock is being bought by using the last charater in 
+		the stock string. Get player data. */
+		let stockInfo = gameInfo.stockValues[stock[stock.length-1] - 1]
+		let playerInfo = gameInfo.playerInfo[player]
+		
+		// Determine if the player has enough money to buy
+		if (playerInfo.cash >= stockInfo.value) {
+			gameInfo.playerInfo[player].cash = gameInfo.playerInfo[player].cash - stockInfo.value
+			gameInfo.playerInfo[player][stock]++
 		} else {
-			console.log(`${transactionInfo[0]} doesn't have enough money to buy ${gameInfo.stockValues[transactionInfo[1]].name}`)
+			console.log(`${playerInfo.name} does not have enough money to buy ${stockInfo.name}!`)
 		}
 	}
 
+	// handles the logic for selling stock
+	// args example: (player1, stock1)
 	let playerSell = (player, stock) => {
-
+		let stockInfo = gameInfo.stockValues[stock[stock.length-1] - 1]
+		let playerInfo = gameInfo.playerInfo[player]
+		
+		// Determine if the player has stock to sell
+		if (playerInfo[stock] > 0) {
+			gameInfo.playerInfo[player][stock]--
+			gameInfo.playerInfo[player].cash = gameInfo.playerInfo[player].cash + stockInfo.value
+		} else {
+			console.log(`${playerInfo.name} does not have enough money to buy ${stockInfo.name}!`)
+		}
 	}
 
 	let endRound = () => {

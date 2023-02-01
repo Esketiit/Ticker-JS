@@ -5,7 +5,7 @@
 */
 document.addEventListener("DOMContentLoaded", (event) => {
 	// Selects the button used to end rounds
-	let round_button = document.getElementById("end-round");
+	let round_button = document.getElementById("end-round")
 
 	/* 
     Selects UI elements related to stock names and stock price.
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			price: document.getElementById("stock4-price"),
 		},
 		rounds: document.getElementById("rounds"),
-	};
+	}
 
 	// These hold the ui elements for each player card.
 	let player1 = {
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		stock4: document.getElementById("player1-stock4-amount"),
 		netWorth: document.getElementById("player1-networth"),
 		cash: document.getElementById("player1-cash"),
-	};
+	}
 
 	let player2 = {
 		name: document.getElementById("player2-name"),
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		stock4: document.getElementById("player2-stock4-amount"),
 		netWorth: document.getElementById("player2-networth"),
 		cash: document.getElementById("player2-cash"),
-	};
+	}
 
 	let player3 = {
 		name: document.getElementById("player3-name"),
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		stock4: document.getElementById("player3-stock4-amount"),
 		netWorth: document.getElementById("player3-networth"),
 		cash: document.getElementById("player3-cash"),
-	};
+	}
 
 	let player4 = {
 		name: document.getElementById("player4-name"),
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		stock4: document.getElementById("player4-stock4-amount"),
 		netWorth: document.getElementById("player4-networth"),
 		cash: document.getElementById("player4-cash"),
-	};
+	}
 
 	// Updates the name of each stock.
 	let setStockNames = (
@@ -89,25 +89,31 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			gameUi.stock3.name[i].innerText = `${name3}: `;
 			gameUi.stock4.name[i].innerText = `${name4}: `;
 		}
-	};
+	}
 
 	// Event listners
 
 	// Rolls new prices and increments round counter
 	round_button.addEventListener("click", (e) => {
-		endRound();
-	});
+		endRound()
+	})
 
 	// this event listener listens for clicks on the buy and sell buttons
 	document.addEventListener("click", function (e) {
-		let classNames = e.target.className.split(" ");
+		// class="buy-button player4-stock1-buy"
+		let classNames = e.target.className.split(" ")
 
 		// if the target has
 		if (classNames.includes("buy-button")) {
-			// figure out the player and stock bought using the class name
+			let transactionInfo = classNames[1].split("-")
+			playerBuy(transactionInfo[0], transactionInfo[1])
+			updateUi()
 		} else if (classNames.includes("sell-button")) {
+			let transactionInfo = classNames[1].split("-")
+      playerSell(transactionInfo[0], transactionInfo[1])
+      updateUi()
 		}
-	});
+	})
 
 	/* 
     Game Logic 
@@ -181,64 +187,77 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				cash: 1500,
 			},
 		},
-	};
+	}
+
+	let playerBuy = (player, stock) => {
+		// figure out the player has enough cash
+		if (gameInfo.playerInfo[transactionInfo[0]].cash >= gameInfo.stockValues[transactionInfo[1]].value) {
+			gameInfo.playerInfo[transactionInfo[0]][transactionInfo[1]]++;
+		} else {
+			console.log(`${transactionInfo[0]} doesn't have enough money to buy ${gameInfo.stockValues[transactionInfo[1]].name}`)
+		}
+	}
+
+	let playerSell = (player, stock) => {
+
+	}
 
 	let endRound = () => {
-		rollStocks();
+		rollStocks()
 
 		// Display new stock values
-		updateUi();
-	};
+		updateUi()
+	}
 
 	// Updates all information on the screen
 	let updateUi = () => {
 		// Update stock prices on screen
-		gameUi.stock1.price.innerText = gameInfo.stockValues[0].value;
-		gameUi.stock2.price.innerText = gameInfo.stockValues[1].value;
-		gameUi.stock3.price.innerText = gameInfo.stockValues[2].value;
-		gameUi.stock4.price.innerText = gameInfo.stockValues[3].value;
+		gameUi.stock1.price.innerText = gameInfo.stockValues[0].value
+		gameUi.stock2.price.innerText = gameInfo.stockValues[1].value
+		gameUi.stock3.price.innerText = gameInfo.stockValues[2].value
+		gameUi.stock4.price.innerText = gameInfo.stockValues[3].value
 
 		// update round counter
-		gameUi.rounds.innerText = `Rounds Left: ${gameInfo.rounds}`;
+		gameUi.rounds.innerText = `Rounds Left: ${gameInfo.rounds}`
 
 		// Update player data on screen
 
 		// Player 1
-		player1.name.innerText = gameInfo.playerInfo.player1.name;
-		player1.stock1.innerText = gameInfo.playerInfo.player1.stock1;
-		player1.stock2.innerText = gameInfo.playerInfo.player1.stock2;
-		player1.stock3.innerText = gameInfo.playerInfo.player1.stock3;
-		player1.stock4.innerText = gameInfo.playerInfo.player1.stock4;
-		player1.cash.innerText = gameInfo.playerInfo.player1.cash;
-		player1.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player1);
+		player1.name.innerText = gameInfo.playerInfo.player1.name
+		player1.stock1.innerText = gameInfo.playerInfo.player1.stock1
+		player1.stock2.innerText = gameInfo.playerInfo.player1.stock2
+		player1.stock3.innerText = gameInfo.playerInfo.player1.stock3
+		player1.stock4.innerText = gameInfo.playerInfo.player1.stock4
+		player1.cash.innerText = gameInfo.playerInfo.player1.cash
+		player1.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player1)
 
 		// Player 2
-		player2.name.innerText = gameInfo.playerInfo.player2.name;
-		player2.stock1.innerText = gameInfo.playerInfo.player2.stock1;
-		player2.stock2.innerText = gameInfo.playerInfo.player2.stock2;
-		player2.stock3.innerText = gameInfo.playerInfo.player2.stock3;
-		player2.stock4.innerText = gameInfo.playerInfo.player2.stock4;
-		player2.cash.innerText = gameInfo.playerInfo.player2.cash;
-		player2.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player2);
+		player2.name.innerText = gameInfo.playerInfo.player2.name
+		player2.stock1.innerText = gameInfo.playerInfo.player2.stock1
+		player2.stock2.innerText = gameInfo.playerInfo.player2.stock2
+		player2.stock3.innerText = gameInfo.playerInfo.player2.stock3
+		player2.stock4.innerText = gameInfo.playerInfo.player2.stock4
+		player2.cash.innerText = gameInfo.playerInfo.player2.cash
+		player2.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player2)
 
 		// Player 3
-		player3.name.innerText = gameInfo.playerInfo.player3.name;
-		player3.stock1.innerText = gameInfo.playerInfo.player3.stock1;
-		player3.stock2.innerText = gameInfo.playerInfo.player3.stock2;
-		player3.stock3.innerText = gameInfo.playerInfo.player3.stock3;
-		player3.stock4.innerText = gameInfo.playerInfo.player3.stock4;
-		player3.cash.innerText = gameInfo.playerInfo.player3.cash;
-		player3.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player3);
+		player3.name.innerText = gameInfo.playerInfo.player3.name
+		player3.stock1.innerText = gameInfo.playerInfo.player3.stock1
+		player3.stock2.innerText = gameInfo.playerInfo.player3.stock2
+		player3.stock3.innerText = gameInfo.playerInfo.player3.stock3
+		player3.stock4.innerText = gameInfo.playerInfo.player3.stock4
+		player3.cash.innerText = gameInfo.playerInfo.player3.cash
+		player3.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player3)
 
 		// Player 4
-		player4.name.innerText = gameInfo.playerInfo.player4.name;
-		player4.stock1.innerText = gameInfo.playerInfo.player4.stock1;
-		player4.stock2.innerText = gameInfo.playerInfo.player4.stock2;
-		player4.stock3.innerText = gameInfo.playerInfo.player4.stock3;
-		player4.stock4.innerText = gameInfo.playerInfo.player4.stock4;
-		player4.cash.innerText = gameInfo.playerInfo.player4.cash;
-		player4.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player4);
-	};
+		player4.name.innerText = gameInfo.playerInfo.player4.name
+		player4.stock1.innerText = gameInfo.playerInfo.player4.stock1
+		player4.stock2.innerText = gameInfo.playerInfo.player4.stock2
+		player4.stock3.innerText = gameInfo.playerInfo.player4.stock3
+		player4.stock4.innerText = gameInfo.playerInfo.player4.stock4
+		player4.cash.innerText = gameInfo.playerInfo.player4.cash
+		player4.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player4)
+	}
 
 	let calculateNetWorth = (player) => {
 		let netWorth =
@@ -246,10 +265,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			player.stock2 * gameInfo.stockValues[1].value +
 			player.stock3 * gameInfo.stockValues[2].value +
 			player.stock4 * gameInfo.stockValues[3].value +
-			player.cash;
+			player.cash
 
-		return netWorth;
-	};
+		return netWorth
+	}
 
 	// Rolls new values for every stock
 	let rollStocks = () => {
@@ -260,41 +279,41 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			let newStockValues = gameInfo.stockValues.map((stock) => {
 				// For each stock, take its current value,
 				// calculate its new value, then update the stock
-				stock.value = rollStock(stock);
-				return stock;
-			});
+				stock.value = rollStock(stock)
+				return stock
+			})
 
 			// Update gameInfo with new values
-			gameInfo.stockValues = newStockValues;
+			gameInfo.stockValues = newStockValues
 
-			return newStockValues;
+			return newStockValues
 		}
-	};
+	}
 
 	// Rolls new values for a single stock
 	let rollStock = (stock = { value, sentiment, volatility }) => {
 		// If diceRoll returns a number higher than sentiment, direction is set to -1
 		// and 1 if the oposite is true
-		let direction = stock.sentiment < diceRoll() ? 1 : -1;
+		let direction = stock.sentiment < diceRoll() ? 1 : -1
 
 		// Using direction and volatility, calculate the new value of the stock
 		// console.log(stock.value, stock.sentiment, stock.volatility, direction)
-		let newValue = stock.value - 5 * stock.volatility * direction;
-		return newValue;
-	};
+		let newValue = stock.value - 5 * stock.volatility * direction
+		return newValue
+	}
 
 	// basic random number function from stackoverflow
 	let diceRoll = (min = 10, max = 100) => {
-		let roll = Math.floor(Math.random() * (max - min + 1));
+		let roll = Math.floor(Math.random() * (max - min + 1))
 
-		return roll;
-	};
+		return roll
+	}
 
 	setStockNames(
 		gameInfo.stockValues[0].name,
 		gameInfo.stockValues[1].name,
 		gameInfo.stockValues[2].name,
 		gameInfo.stockValues[3].name
-	);
-	updateUi();
-});
+	)
+	updateUi()
+})

@@ -152,3 +152,49 @@ body {
 .sell-button:active {
   border: 2px solid white
 }
+
+/* end game modal */
+#end-modal {
+  /* Hidden by default */
+  display: none;
+  /* Stay in place */
+  position: fixed;
+  /* Sit on top */
+  z-index: 1;
+  left: 0;
+  top: 0;
+  /* Full width */
+  width: 100%;
+  /* Full height */
+  height: 100%;
+  /* Enable scroll if needed */
+  overflow: auto;
+  /* Black w/ opacity */
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+#end-modal-content {
+  background-color: wheat;
+  /* 15% from the top and centered */
+  margin: 15% auto;
+  padding: 20px;
+  border: 3px solid black;
+  border-radius: 5px;
+  height: 60vh;
+  width: 80vw;
+}
+
+/* Close button for end game modal */
+#modal-close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+#modal-close-button:hover,
+#modal-close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}

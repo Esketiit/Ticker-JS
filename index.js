@@ -6,6 +6,7 @@
 document.addEventListener("DOMContentLoaded", (event) => {
 	// Selects the button used to end rounds
 	let round_button = document.getElementById("end-round")
+	let endModal = document.getElementById("end-modal")
 
 	/* 
     Selects UI elements related to stock names and stock price.
@@ -103,7 +104,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		// class="buy-button player4-stock1-buy"
 		let classNames = e.target.className.split(" ")
 
-		// if the target has
+		/* if the target has "buy-button" or "sell-button" in its class, its a 
+		   player button */
 		if (classNames.includes("buy-button")) {
 			let transactionInfo = classNames[1].split("-")
 			playerBuy(transactionInfo[0], transactionInfo[1])
@@ -115,6 +117,19 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		}
 	})
 
+	document.addEventListener("click", function(e) {
+		if (e.target.id === "modal-close-button") {
+			endModal.style.display = "none"
+		}
+	})
+
+	document.addEventListener("click", function(e) {
+		console.log(e.target.id)
+		if (e.target.id === "myBtn") {
+			endModal.style.display = "block"
+		}
+	})
+
 	/* 
     Game Logic 
     Stocks prices move in multiples of 5. 
@@ -122,7 +137,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     Volatility is a number from 1 to 5 and it determines how much a stock moves in a turn
   */
 	let gameInfo = {
-		rounds: 20,
+		rounds: 2,
 		// stockValues should probably be an object. 
 		stockValues: [
 			{
@@ -173,7 +188,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			},
 			player3: {
 				name: "Player 3",
-				stock1: 3,
+				stock1: 0,
 				stock2: 0,
 				stock3: 0,
 				stock4: 0,
@@ -219,7 +234,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			gameInfo.playerInfo[player][stock]--
 			gameInfo.playerInfo[player].cash = gameInfo.playerInfo[player].cash + stockInfo.value
 		} else {
-			console.log(`${playerInfo.name} does not have enough money to buy ${stockInfo.name}!`)
+			console.log(`${playerInfo.name} does not have any shares of ${stockInfo.name}!`)
 		}
 	}
 
@@ -228,6 +243,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 		// Display new stock values
 		updateUi()
+
+		if (gameInfo.rounds === 0) {
+			endGame()
+		}
+	}
+
+	let endGame = () => {
+		endModal.style.display = "block"
 	}
 
 	// Updates all information on the screen

@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 	document.addEventListener("click", function(e) {
 		console.log(e.target.id)
-		if (e.target.id === "myBtn") {
+		if (e.target.id === "modal-open-button") {
 			endModal.style.display = "block"
 		}
 	})
@@ -250,7 +250,21 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	}
 
 	let endGame = () => {
+		// display and enable end screen button
+		let openModalButton = document.getElementById("open-modal-button")
+		
+		// disable all buttons
+		let buttons = document.getElementsByTagName("button")
+		for (i = 0; i < buttons.length; i++) {
+			if (buttons[i].id !== "modal-open-button" || buttons[i].id !== "modal-close-button") {
+				buttons[i].disabled = true
+			}
+		}
+
+		console.log(openModalButton)
 		endModal.style.display = "block"
+		openModalButton.display = "block"
+		openModalButton.disabled = false
 	}
 
 	// Updates all information on the screen

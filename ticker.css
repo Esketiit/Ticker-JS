@@ -204,6 +204,8 @@ body {
 }
 
 #end-modal-content {
+  display: grid;
+  grid-template-columns: 1fr;
   background-color: wheat;
   /* 15% from the top and centered */
   margin: 15% auto;
@@ -214,21 +216,41 @@ body {
   width: 80vw;
 }
 
+#winner-info {
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+  padding: 10px;
+  background-color: greenyellow;
+  border: 3px solid black;
+  border-radius: 5px;
+  height: 80%;
+}
+
 /* Close button for end game modal */
 #modal-close-button {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
+  position: relative;
+  width: 10vw;
+  color: black;
+  background-color: orange;
+  border: 3px solid black;
+  border-radius: 5px;
+  margin: auto 45%;
+  padding: 3px;
+  font-size: 20px;
   font-weight: bold;
 }
 
 #modal-close-button:hover,
 #modal-close-button:focus {
-  color: black;
+  background-color: orangered;
   text-decoration: none;
   cursor: pointer;
 }
 
-#open-modal-button:disabled {
+#modal-close-button:active {
+  border-color: white;
+}
+
+#open-modal-button {
   display: none;
 }

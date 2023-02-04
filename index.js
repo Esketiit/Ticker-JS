@@ -124,8 +124,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	})
 
 	document.addEventListener("click", function(e) {
-		console.log(e.target.id)
-		if (e.target.id === "modal-open-button") {
+		if (e.target.id === "open-modal-button") {
 			endModal.style.display = "block"
 		}
 	})
@@ -137,7 +136,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
     Volatility is a number from 1 to 5 and it determines how much a stock moves in a turn
   */
 	let gameInfo = {
-		rounds: 2,
+		rounds: 0,
+		winner: null,
 		// stockValues should probably be an object. 
 		stockValues: [
 			{
@@ -174,7 +174,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				name: "Player 1",
 				stock1: 0,
 				stock2: 0,
-				stock3: 0,
+				stock3: 10,
 				stock4: 0,
 				cash: 1500,
 			},
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				stock4: 0,
 				cash: 1500,
 			},
-		},
+		}
 	}
 
 	// handles the logic for buying stock
@@ -253,18 +253,40 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		// display and enable end screen button
 		let openModalButton = document.getElementById("open-modal-button")
 		
-		// disable all buttons
+		// disable all gameplay buttons 
 		let buttons = document.getElementsByTagName("button")
 		for (i = 0; i < buttons.length; i++) {
 			if (buttons[i].id !== "modal-open-button" || buttons[i].id !== "modal-close-button") {
 				buttons[i].disabled = true
 			}
 		}
-
-		console.log(openModalButton)
+			// Determine who won. This could probably be done better.
+			// create variable that track highest NW
+			let highestNetWorth = 0
+			for (x in gameInfo.playerInfo) {
+				// create temporary variable that hold the current players NW
+				let netWorth = calculateNetWorth(gameInfo.playerInfo[x])
+				// if the current player has the highest NW, reassign winner and highestNW
+				if (netWorth > highestNetWorth) {
+					highestNetWorth  = netWorth
+					gameInfo.winner = gameInfo.playerInfo[x]
+				}
+			}
+			
+	
+		updateEndModal()
 		endModal.style.display = "block"
-		openModalButton.display = "block"
+		openModalButton.style.display = "block"
 		openModalButton.disabled = false
+	}
+
+	// UI stuff. Would storing all ui functions in an object make sense?
+
+
+	// Updates information on end modal
+	let updateEndModal = () => {
+		let winnerAn = document.getElementById("winner-announcement")
+		winnerAn.innerText = `${gameInfo.winner.name} is just a better Trader!`
 	}
 
 	// Updates all information on the screen

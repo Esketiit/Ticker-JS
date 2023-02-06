@@ -16,11 +16,13 @@ body {
 }
 
 #stock-container {
-  width: 100vw;
+  width: 98vw;
   height: 25vh;
+  border: 3px solid black;
+  border-radius: 5px;
   padding: 10px;
-  margin: 0 auto;
-  background-color: greenyellow;
+  margin: 5px auto;
+  background-color: #85BB65;
   display: grid;
   grid-template-columns: 2fr 2fr;
   gap: 10px;
@@ -28,9 +30,10 @@ body {
 
 .stock-element {
   padding: 10px;
+  border-radius: 5px;
   background-color: darkgreen;
   color: white;
-  border: black 1px solid;
+  border: white 1px solid;
 }
 
 #end-round:disabled {

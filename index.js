@@ -92,6 +92,67 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		}
 	}
 
+	// Updates all information on the screen
+	let updateUi = () => {
+		// Update stock prices on screen
+		gameUi.stock1.price.innerText = gameInfo.stockValues[0].value
+		gameUi.stock2.price.innerText = gameInfo.stockValues[1].value
+		gameUi.stock3.price.innerText = gameInfo.stockValues[2].value
+		gameUi.stock4.price.innerText = gameInfo.stockValues[3].value
+
+		// update round counter
+		gameUi.rounds.innerText = `Rounds Left: ${gameInfo.rounds}`
+
+		// Update player data on screen
+
+		// Player 1
+		player1.name.innerText = gameInfo.playerInfo.player1.name
+		player1.stock1.innerText = gameInfo.playerInfo.player1.stock1
+		player1.stock2.innerText = gameInfo.playerInfo.player1.stock2
+		player1.stock3.innerText = gameInfo.playerInfo.player1.stock3
+		player1.stock4.innerText = gameInfo.playerInfo.player1.stock4
+		player1.cash.innerText = gameInfo.playerInfo.player1.cash
+		player1.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player1)
+
+		// Player 2
+		player2.name.innerText = gameInfo.playerInfo.player2.name
+		player2.stock1.innerText = gameInfo.playerInfo.player2.stock1
+		player2.stock2.innerText = gameInfo.playerInfo.player2.stock2
+		player2.stock3.innerText = gameInfo.playerInfo.player2.stock3
+		player2.stock4.innerText = gameInfo.playerInfo.player2.stock4
+		player2.cash.innerText = gameInfo.playerInfo.player2.cash
+		player2.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player2)
+
+		// Player 3
+		player3.name.innerText = gameInfo.playerInfo.player3.name
+		player3.stock1.innerText = gameInfo.playerInfo.player3.stock1
+		player3.stock2.innerText = gameInfo.playerInfo.player3.stock2
+		player3.stock3.innerText = gameInfo.playerInfo.player3.stock3
+		player3.stock4.innerText = gameInfo.playerInfo.player3.stock4
+		player3.cash.innerText = gameInfo.playerInfo.player3.cash
+		player3.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player3)
+
+		// Player 4
+		player4.name.innerText = gameInfo.playerInfo.player4.name
+		player4.stock1.innerText = gameInfo.playerInfo.player4.stock1
+		player4.stock2.innerText = gameInfo.playerInfo.player4.stock2
+		player4.stock3.innerText = gameInfo.playerInfo.player4.stock3
+		player4.stock4.innerText = gameInfo.playerInfo.player4.stock4
+		player4.cash.innerText = gameInfo.playerInfo.player4.cash
+		player4.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player4)
+	}
+
+	let calculateNetWorth = (player) => {
+		let netWorth =
+			player.stock1 * gameInfo.stockValues[0].value +
+			player.stock2 * gameInfo.stockValues[1].value +
+			player.stock3 * gameInfo.stockValues[2].value +
+			player.stock4 * gameInfo.stockValues[3].value +
+			player.cash
+
+		return netWorth
+	}
+
 	// Event listners
 
 	// Rolls new prices and increments round counter
@@ -136,7 +197,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
     Volatility is a number from 1 to 5 and it determines how much a stock moves in a turn
   */
 	let gameInfo = {
-		rounds: 0,
+		status: "starting",
+		rounds: 10,
+		roundCounter: 0,
+		trades: [],
 		winner: null,
 		// stockValues should probably be an object. 
 		stockValues: [
@@ -201,14 +265,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				stock3: 0,
 				stock4: 0,
 				cash: 1500,
-			},
-		}
+			}
+		},
+		// Initially the same as the rest of game data.
+		previousRounds: []
 	}
 
 	// handles the logic for buying stock
 	// args example: (player1, stock1)
 	let playerBuy = (player, stock) => {
-		console.log(player, stock)
+		// console.log(player, stock)
 		/* figure out which stock is being bought by using the last charater in 
 		the stock string. Get player data. */
 		let stockInfo = gameInfo.stockValues[stock[stock.length-1] - 1]
@@ -239,7 +305,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	}
 
 	let endRound = () => {
+		// // update lastRound and previousRounds.
+		// // Turns out that copying an object into itself is weird.
+		// gameInfo.lastRound = structuredClone(gameInfo)
+		if (gameInfo.roundCounter === 0) {
+			
+		}
+		gameInfo.previousRounds.push(structuredClone(gameInfo))
+
 		rollStocks()
+
+		// calculate the trades that were made 
+		checkForTrades()
 
 		// Display new stock values
 		updateUi()
@@ -260,28 +337,80 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				buttons[i].disabled = true
 			}
 		}
-			// Determine who won. This could probably be done better.
-			// create variable that track highest NW
-			let highestNetWorth = 0
-			for (x in gameInfo.playerInfo) {
-				// create temporary variable that hold the current players NW
-				let netWorth = calculateNetWorth(gameInfo.playerInfo[x])
-				// if the current player has the highest NW, reassign winner and highestNW
-				if (netWorth > highestNetWorth) {
-					highestNetWorth  = netWorth
-					gameInfo.winner = gameInfo.playerInfo[x]
-				}
+		// Determine who won. This could probably be done better.
+		// create variable that track highest NW
+		let highestNetWorth = 0
+		for (x in gameInfo.playerInfo) {
+			// create temporary variable that hold the current players NW
+			let netWorth = calculateNetWorth(gameInfo.playerInfo[x])
+			// if the current player has the highest NW, reassign winner and highestNW
+			if (netWorth > highestNetWorth) {
+				highestNetWorth  = netWorth
+				gameInfo.winner = gameInfo.playerInfo[x]
 			}
-			
-	
+		}
+		
 		updateEndModal()
 		endModal.style.display = "block"
 		openModalButton.style.display = "block"
 		openModalButton.disabled = false
 	}
 
-	// UI stuff. Would storing all ui functions in an object make sense?
+	let checkForTrades = () => {
+		// Get the keys for each player object. keys is an array
+		let keys = Object.keys(gameInfo.playerInfo.player1).filter(key => key.includes("stock"))
+		// I need to parse why this works. Its so simple but I can't explain it.
+		let lastRound = gameInfo.previousRounds[gameInfo.previousRounds.length - 2]
+		
+		// check for differences in player holdings from last round
+		// iterate through the different keys in playerInfo
+		for (key in gameInfo.playerInfo) {
+			// for every player object, compare their current holdings with what they had last round
+			for (i = 0; i < keys.length; i++) {
+				// if there is a difference in the holdings of a stock, run something
+				if (gameInfo.playerInfo[key][keys[i]] !== lastRound.playerInfo[key][keys[i]]) {
+					trackHoldingsChange(lastRound, lastRound.playerInfo[key], gameInfo.playerInfo[key], keys[i])
+				}
+			}
+		}
+	}
 
+	// creates trade object
+	let trackHoldingsChange = (lastRound, playerLastRound, playerCurrentRound, key) => {
+		let stockBeingTraded = lastRound.stockValues[key[key.length-1] - 1]
+		console.log(stockBeingTraded)
+
+		// determine if the player was buying or selling 
+		if (playerCurrentRound[key] > playerLastRound[key]) {
+			// the player is buying
+			console.log("buy")
+			gameInfo.trades.push({
+				type: "market",
+				action: "buy",
+				player: playerLastRound,
+				stock: stockBeingTraded,
+				amount: playerCurrentRound[key] - playerLastRound[key],
+				round: lastRound.roundCounter
+			})
+		} else {
+			// the player is selling
+			console.log("sell")
+			gameInfo.trades.push({
+				type: "market",
+				action: "sell",
+				player: playerLastRound,
+				stock: stockBeingTraded,
+				amount: playerLastRound[key] - playerCurrentRound[key],
+				round: lastRound.roundCounter
+			})
+		}
+		console.log(gameInfo.trades)
+	}
+
+	/* // for the eventual player-to-player trading mechanic
+	let executeTrade = () => {
+
+	}*/ 
 
 	// Updates information on end modal
 	let updateEndModal = () => {
@@ -289,70 +418,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		winnerAn.innerText = `${gameInfo.winner.name} is just a better Trader!`
 	}
 
-	// Updates all information on the screen
-	let updateUi = () => {
-		// Update stock prices on screen
-		gameUi.stock1.price.innerText = gameInfo.stockValues[0].value
-		gameUi.stock2.price.innerText = gameInfo.stockValues[1].value
-		gameUi.stock3.price.innerText = gameInfo.stockValues[2].value
-		gameUi.stock4.price.innerText = gameInfo.stockValues[3].value
-
-		// update round counter
-		gameUi.rounds.innerText = `Rounds Left: ${gameInfo.rounds}`
-
-		// Update player data on screen
-
-		// Player 1
-		player1.name.innerText = gameInfo.playerInfo.player1.name
-		player1.stock1.innerText = gameInfo.playerInfo.player1.stock1
-		player1.stock2.innerText = gameInfo.playerInfo.player1.stock2
-		player1.stock3.innerText = gameInfo.playerInfo.player1.stock3
-		player1.stock4.innerText = gameInfo.playerInfo.player1.stock4
-		player1.cash.innerText = gameInfo.playerInfo.player1.cash
-		player1.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player1)
-
-		// Player 2
-		player2.name.innerText = gameInfo.playerInfo.player2.name
-		player2.stock1.innerText = gameInfo.playerInfo.player2.stock1
-		player2.stock2.innerText = gameInfo.playerInfo.player2.stock2
-		player2.stock3.innerText = gameInfo.playerInfo.player2.stock3
-		player2.stock4.innerText = gameInfo.playerInfo.player2.stock4
-		player2.cash.innerText = gameInfo.playerInfo.player2.cash
-		player2.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player2)
-
-		// Player 3
-		player3.name.innerText = gameInfo.playerInfo.player3.name
-		player3.stock1.innerText = gameInfo.playerInfo.player3.stock1
-		player3.stock2.innerText = gameInfo.playerInfo.player3.stock2
-		player3.stock3.innerText = gameInfo.playerInfo.player3.stock3
-		player3.stock4.innerText = gameInfo.playerInfo.player3.stock4
-		player3.cash.innerText = gameInfo.playerInfo.player3.cash
-		player3.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player3)
-
-		// Player 4
-		player4.name.innerText = gameInfo.playerInfo.player4.name
-		player4.stock1.innerText = gameInfo.playerInfo.player4.stock1
-		player4.stock2.innerText = gameInfo.playerInfo.player4.stock2
-		player4.stock3.innerText = gameInfo.playerInfo.player4.stock3
-		player4.stock4.innerText = gameInfo.playerInfo.player4.stock4
-		player4.cash.innerText = gameInfo.playerInfo.player4.cash
-		player4.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player4)
-	}
-
-	let calculateNetWorth = (player) => {
-		let netWorth =
-			player.stock1 * gameInfo.stockValues[0].value +
-			player.stock2 * gameInfo.stockValues[1].value +
-			player.stock3 * gameInfo.stockValues[2].value +
-			player.stock4 * gameInfo.stockValues[3].value +
-			player.cash
-
-		return netWorth
-	}
-
 	// Rolls new values for every stock
 	let rollStocks = () => {
 		if (gameInfo.rounds > 0) {
+			gameInfo.roundCounter++
 			gameInfo.rounds--;
 
 			// Iterate through an array of objects holding each stocks value
@@ -395,5 +464,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		gameInfo.stockValues[2].name,
 		gameInfo.stockValues[3].name
 	)
+
+	gameInfo.previousRounds.push(structuredClone(gameInfo))
 	updateUi()
 })

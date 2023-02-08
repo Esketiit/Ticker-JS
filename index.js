@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   */
 	let gameInfo = {
 		status: "starting",
-		rounds: 10,
+		rounds: 5,
 		roundCounter: 0,
 		trades: [],
 		winner: null,
@@ -356,6 +356,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		openModalButton.disabled = false
 	}
 
+	// Returns an array of trades a player has done
+	let findTrades = (player) => {
+		let trades = gameInfo.trades.filter((trade) => {
+			return trade.player.name === player.name ? true : false
+		})
+		
+		return trades
+	}
+
 	let checkForTrades = () => {
 		// Get the keys for each player object. keys is an array
 		let keys = Object.keys(gameInfo.playerInfo.player1).filter(key => key.includes("stock"))
@@ -378,12 +387,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	// creates trade object
 	let trackHoldingsChange = (lastRound, playerLastRound, playerCurrentRound, key) => {
 		let stockBeingTraded = lastRound.stockValues[key[key.length-1] - 1]
-		console.log(stockBeingTraded)
 
 		// determine if the player was buying or selling 
 		if (playerCurrentRound[key] > playerLastRound[key]) {
 			// the player is buying
-			console.log("buy")
+			// console.log("buy")
 			gameInfo.trades.push({
 				type: "market",
 				action: "buy",
@@ -394,7 +402,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			})
 		} else {
 			// the player is selling
-			console.log("sell")
+			// console.log("sell")
 			gameInfo.trades.push({
 				type: "market",
 				action: "sell",
@@ -404,7 +412,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				round: lastRound.roundCounter
 			})
 		}
-		console.log(gameInfo.trades)
 	}
 
 	/* // for the eventual player-to-player trading mechanic
@@ -412,10 +419,79 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 	}*/ 
 
-	// Updates information on end modal
+	// Updates all information on end modal
 	let updateEndModal = () => {
+		// Grab elements from document
 		let winnerAn = document.getElementById("winner-announcement")
-		winnerAn.innerText = `${gameInfo.winner.name} is just a better Trader!`
+		let winnerHoldings = document.getElementById("winner-holdings")
+		let winnerTrades = document.getElementById("winner-total-trades")
+		let tradeAcc = document.getElementById("winner-accuracy")
+		let winnerBestTrade = document.getElementById("winner-best-trade")
+		let winnerWorstTrade = document.getElementById("winner-worst-trade")
+		let winnerHighestNW = document.getElementById("winner-highest-networth")
+		let winnerLowestNW = document.getElementById("winner-lowest-networth")
+
+		// Update winner announcment
+		winnerAn.innerText = `${gameInfo.winner.name} is just built different!`
+
+		// Calculate winners holdings
+		winnerHoldings.innerText = `${calculateHoldings(gameInfo.winner)}`
+
+		// Count total trades
+		winnerTrades.innerText = `${findTrades(gameInfo.winner).length}`
+
+		// Trade accuracy
+		tradeAcc.innerText = `${calculateAccuracy(gameInfo.winner)}%`
+
+		// Best Trade
+
+
+		// Worst Trade
+
+
+		// Total Profits
+
+
+		// Highest Net Worth
+
+
+		// Lowest Net Worth
+		
+	}
+
+	let calculateHoldings = (player) => {
+		let keys = Object.keys(gameInfo.playerInfo.player1).filter(key => key.includes("stock"))
+		let sum = 0
+
+		for (let i = 0; i < keys.length; i++) {
+			sum = sum + (player[keys[i]] * gameInfo.stockValues[i].value)
+		}
+
+		return sum
+	}
+
+	// Calculates accuracy of players trade
+	// This could be changed/updated later
+	let calculateAccuracy = (player) => {
+		let trades = findTrades(player)
+		let goodTrades = 0
+
+		gameInfo.trades.forEach((trade) => {
+			// find the current version of the stock that was traded
+			let stock = gameInfo.stockValues.find((y) => {
+				return y.name === trade.stock.name
+			}) 
+			
+			// if the trade was a buy and the game ended with the stock at a higher value
+			// then it was bought at, increment goodTrade
+
+			if (trade.action === "buy" && (trade.stock.value < stock.value)) {
+				goodTrades++
+			}
+		})
+
+		// Return profitable trade rate
+		return (goodTrades/trades.length)*100
 	}
 
 	// Rolls new values for every stock

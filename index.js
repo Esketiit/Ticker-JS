@@ -142,12 +142,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		player4.netWorth.innerText = calculateNetWorth(gameInfo.playerInfo.player4)
 	}
 
-	let calculateNetWorth = (player) => {
+	let calculateNetWorth = (player, roundInfo) => {
+		// I want this function to get networth based on previous rounds too
+		// gameInfo is undefined, calculate using the current rounds info
+		if (roundInfo === undefined) {
+			roundInfo = gameInfo
+		}
+		
 		let netWorth =
-			player.stock1 * gameInfo.stockValues[0].value +
-			player.stock2 * gameInfo.stockValues[1].value +
-			player.stock3 * gameInfo.stockValues[2].value +
-			player.stock4 * gameInfo.stockValues[3].value +
+			player.stock1 * roundInfo.stockValues[0].value +
+			player.stock2 * roundInfo.stockValues[1].value +
+			player.stock3 * roundInfo.stockValues[2].value +
+			player.stock4 * roundInfo.stockValues[3].value +
 			player.cash
 
 		return netWorth
@@ -491,20 +497,23 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				roundZeroWinner = gameInfo.previousRounds[0].playerInfo[key]
 			}
 		}
-		winnerTotalProfits.innerText = `${calculateNetWorth(gameInfo.winner) - calculateNetWorth(roundZeroWinner)}`
+		console.log(gameInfo.winner, roundZeroWinner)
+		winnerTotalProfits.innerText = `${calculateNetWorth(gameInfo.winner) - calculateNetWorth(roundZeroWinner, gameInfo.previousRounds[0])}`
 
 		// Highest Net Worth
 		let highestNW = 0
 
-		// This is nasty
+		// This looks nasty. 
+		// Calling calculateNW a bunch of times instead of using more variables is dumb.
 		gameInfo.previousRounds.forEach((round) => {
 			// iterate through playerInfo object
 			for (key in round.playerInfo) {
 				// if the winner object and the current player are the same
 				if (round.playerInfo[key].name === gameInfo.winner.name) {
+					// console.log(calculateNetWorth(round.playerInfo[key]), calculateNetWorth(gameInfo.winner), round.roundCounter, gameInfo.previousRounds)
 					// compare net worth
-					if (calculateNetWorth(round.playerInfo[key]) > highestNW) {
-						highestNW = calculateNetWorth(round.playerInfo[key])
+					if (calculateNetWorth(round.playerInfo[key], round) > highestNW) {
+						highestNW = calculateNetWorth(round.playerInfo[key], round)
 					}
 				}
 			}
@@ -518,8 +527,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		gameInfo.previousRounds.forEach((round) => {
 			for (key in round.playerInfo) {
 				if (round.playerInfo[key].name === gameInfo.winner.name) {
-					if (calculateNetWorth(round.playerInfo[key]) < lowestNW) {
-						lowestNW = calculateNetWorth(round.playerInfo[key])
+					if (calculateNetWorth(round.playerInfo[key], round) < lowestNW) {
+						lowestNW = calculateNetWorth(round.playerInfo[key], round)
 					}
 				}
 			}
@@ -667,7 +676,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		gameInfo.stockValues[2].name,
 		gameInfo.stockValues[3].name
 	)
-
+	
+	// This puts the inital game data in previousRounds
 	gameInfo.previousRounds.push(structuredClone(gameInfo))
 	updateUi()
 })

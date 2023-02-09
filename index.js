@@ -425,11 +425,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		let winnerAn = document.getElementById("winner-announcement")
 		let winnerHoldings = document.getElementById("winner-holdings")
 		let winnerTrades = document.getElementById("winner-total-trades")
-		let tradeAcc = document.getElementById("winner-accuracy")
+		let winnerTradeAcc = document.getElementById("winner-accuracy")
 		let winnerBestTrade = document.getElementById("winner-best-trade")
 		let winnerWorstTrade = document.getElementById("winner-worst-trade")
 		let winnerHighestNW = document.getElementById("winner-highest-networth")
 		let winnerLowestNW = document.getElementById("winner-lowest-networth")
+		let winnerTotalProfits = document.getElementById("winner-total-profits")
 
 		// Update winner announcment
 		winnerAn.innerText = `${gameInfo.winner.name} is just built different!`
@@ -438,25 +439,151 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		winnerHoldings.innerText = `${calculateHoldings(gameInfo.winner)}`
 
 		// Count total trades
-		winnerTrades.innerText = `${findTrades(gameInfo.winner).length}`
+		let totalTrades = findTrades(gameInfo.winner).length
+		winnerTrades.innerText = `${totalTrades}`
 
 		// Trade accuracy
-		tradeAcc.innerText = `${calculateAccuracy(gameInfo.winner)}%`
+		if (totalTrades > 0) {
+			winnerTradeAcc.innerText = `${Math.round((calculateAccuracy(gameInfo.winner)))}%`
+		} else {
+			winnerTradeAcc.innerText = "0% and 100%!"
+		}
+		
+		/* Have to think of a better way to display best and worst trade */
 
 		// Best Trade
-
+		let bestTradeData = calculateBestTrade(gameInfo.winner)
+		if (totalTrades === 0) {
+			winnerBestTrade.innerText = `${gameInfo.winner.name} didn't trade!`
+		} else if (totalTrades === 1) {
+			let trade = findTrades(gameInfo.winner)[0]
+			if (bestTradeData[0].action === "buy") {
+				winnerBestTrade.innerText = `Buying ${trade.stock.name} @ ${trade.stock.value} a share!`
+			} else {
+				winnerBestTrade.innerText = `Selling ${trade.stock.name} @ ${trade.stock.value} a share!`
+			}
+		} else {
+			if (bestTradeData[0].action === "buy") {
+				winnerBestTrade.innerText = `Buying ${bestTradeData[0].stock.name} @ ${bestTradeData[0].stock.value} a share!`
+			} else {
+				winnerBestTrade.innerText = `Selling ${bestTradeData[0].stock.name} @ ${bestTradeData[0].stock.value} a share!`
+			}
+		}
 
 		// Worst Trade
-
+		let worstTradeData = calculateWorstTrade(gameInfo.winner)
+		if (totalTrades > 1) {
+			if (worstTradeData[0].action === "buy") {
+				winnerWorstTrade.innerText = `Buying ${worstTradeData[0].stock.name} @ ${worstTradeData[0].stock.value} a share!`
+			} else {
+				winnerWorstTrade.innerText = `Selling ${worstTradeData[0].stock.name} @ ${worstTradeData[0].stock.value} a share!`
+			}
+		} else if (totalTrades === 1) {
+			winnerWorstTrade.innerText = "Traded once."
+		} else {
+			winnerWorstTrade.innerText = "To trade is to lose."
+		}
 
 		// Total Profits
-
+		let roundZeroWinner = {}
+		for (key in gameInfo.previousRounds[0].playerInfo) {
+			if (gameInfo.previousRounds[0].playerInfo[key].name === gameInfo.winner.name) {
+				roundZeroWinner = gameInfo.previousRounds[0].playerInfo[key]
+			}
+		}
+		winnerTotalProfits.innerText = `${calculateNetWorth(gameInfo.winner) - calculateNetWorth(roundZeroWinner)}`
 
 		// Highest Net Worth
+		let highestNW = 0
 
+		// This is nasty
+		gameInfo.previousRounds.forEach((round) => {
+			// iterate through playerInfo object
+			for (key in round.playerInfo) {
+				// if the winner object and the current player are the same
+				if (round.playerInfo[key].name === gameInfo.winner.name) {
+					// compare net worth
+					if (calculateNetWorth(round.playerInfo[key]) > highestNW) {
+						highestNW = calculateNetWorth(round.playerInfo[key])
+					}
+				}
+			}
+		})
+		winnerHighestNW.innerText = highestNW
 
 		// Lowest Net Worth
+		let lowestNW = calculateNetWorth(gameInfo.winner)
+
+		// Just as nasty
+		gameInfo.previousRounds.forEach((round) => {
+			for (key in round.playerInfo) {
+				if (round.playerInfo[key].name === gameInfo.winner.name) {
+					if (calculateNetWorth(round.playerInfo[key]) < lowestNW) {
+						lowestNW = calculateNetWorth(round.playerInfo[key])
+					}
+				}
+			}
+		})
+		winnerLowestNW.innerText = lowestNW
+	}
+
+	let calculateWorstTrade = (player) => {
+		let keys = Object.keys(gameInfo.playerInfo.player1).filter(key => key.includes("stock"))
+		let trades = findTrades(player)
+		let worstTrade = [{}, 0] // an array with the worst trade and its profit in %
 		
+		trades.forEach((trade) => {
+			// Find current version of stock in trade. Maybe this can be a helper function.
+			let stock = gameInfo.stockValues.find((y) => {
+				return y.name === trade.stock.name
+			})
+			let profit = 0
+
+			// compare trade to worstTrade, replace worstTrade if it has lower profit
+			if (trade.action === "buy") {
+				// ((currentPrice - buyPrice)/buyPrice)*100 = profit
+				profit = (stock.value - trade.stock.value)/trade.stock.value * 100
+			} else if (trade.action === "sell") {
+				// (sellPrice - currentPrice)/buyPrice*100 = profit
+				profit = (trade.stock.value - stock.value)/trade.stock.value * 100
+			}
+
+			if (profit < worstTrade[1]) {
+				worstTrade = [trade, profit]
+			}
+		})
+
+		// console.log(worstTrade)
+		return worstTrade
+	}
+
+	let calculateBestTrade = (player) => {
+		let keys = Object.keys(gameInfo.playerInfo.player1).filter(key => key.includes("stock"))
+		let trades = findTrades(player)
+		let bestTrade = [{}, 0] // an array with the best trade and its profit in %
+		
+		trades.forEach((trade) => {
+			// Find current version of stock in trade. Maybe this can be a helper function.
+			let stock = gameInfo.stockValues.find((y) => {
+				return y.name === trade.stock.name
+			})
+			let profit = 0
+
+			// compare trade to bestTrade, replace bestTrade if it has higher profit
+			if (trade.action === "buy") {
+				// ((currentPrice - buyPrice)/buyPrice)*100 = profit
+				profit = (stock.value - trade.stock.value)/trade.stock.value * 100
+			} else if (trade.action === "sell") {
+				// (sellPrice - currentPrice)/buyPrice*100 = profit
+				profit = (trade.stock.value - stock.value)/trade.stock.value * 100
+			}
+
+			if (profit > bestTrade[1]) {
+				bestTrade = [trade, profit]
+			}
+		})
+		// console.log(bestTrade)
+		return bestTrade
 	}
 
 	let calculateHoldings = (player) => {

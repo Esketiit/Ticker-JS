@@ -13,6 +13,7 @@ body {
   line-height: 1.5;
   color: #333;
   background: tan;
+  overflow: hidden;
 }
 
 #stock-container {
@@ -74,7 +75,7 @@ body {
   color: white;
   background-color: teal;
   width: 200px;
-  height: 60px;
+  height: 100px;
   margin: 0 auto;
   margin-top: 10px;
   border: 2px inset black;
@@ -84,6 +85,28 @@ body {
 #rounds {
   padding-top: 20%;
   padding-left: 25%
+}
+
+#player-trade-button {
+  position: relative;
+  display: block;
+  color: black;
+  background-color: #85BB65;
+  height: 25px;
+  width: 150px;
+  margin: 0 auto;
+  margin-top: 10px;
+  border: 2px solid black;
+  border-radius: 3px;
+}
+
+#player-trade-button:hover:enabled {
+  background-color: lightgreen;
+}
+
+#player-trade-button:active:enabled {
+  background-color: lightgreen;
+  border-color: white;
 }
 
 #player-container {
@@ -99,6 +122,11 @@ body {
   display: grid;
   grid-template-columns: 40vw 40vw;
   gap: 10px;
+}
+
+#player-container>div {
+  border: 3px solid black;
+  border-radius: 3px;
 }
 
 #player-container>.player:nth-child(1) {

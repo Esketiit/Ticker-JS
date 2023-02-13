@@ -290,14 +290,71 @@ body {
   font-weight: bold;
 }
 
-#modal-close-button:hover,
-#modal-close-button:focus {
+#modal-close-button:hover {
   background-color: orangered;
   text-decoration: none;
   cursor: pointer;
 }
 
 #modal-close-button:active {
+  border-color: white;
+}
+
+#trade-modal {
+  display: block;
+}
+
+#trade-modal-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  background-color: green;
+  /* 15% from the top and centered */
+  margin: 10% auto;
+  padding: 20px;
+  border: 3px solid black;
+  border-radius: 5px;
+  height: 80vh;
+  width: 95vw;
+}
+
+#trade-box-container {
+  display: grid;
+  grid-template-columns: 3fr 3fr 3fr;
+  background-color: yellow;
+}
+
+.trade-box {
+  padding: 10px;
+  margin: 10px;
+  background-color: orangered;
+}
+
+.trader-name {
+  text-align: center;
+}
+
+#trade-close-button {
+  position: absolute;
+  width: 10vw;
+  color: black;
+  background-color: orange;
+  border: 3px solid black;
+  border-radius: 5px;
+  margin: auto 45%;
+  padding: 3px;
+  font-size: 20px;
+  font-weight: bold;
+  bottom: 15vh;
+  left: 0vw;
+}
+
+#trade-close-button:hover {
+  background-color: orangered;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#trade-close-button:active {
   border-color: white;
 }
 

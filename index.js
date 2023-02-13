@@ -7,6 +7,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	// Selects the button used to end rounds
 	let round_button = document.getElementById("end-round")
 	let endModal = document.getElementById("end-modal")
+	let tradeModal = document.getElementById("trade-modal")
+	// let tradeForms = document.getElementsByClassName("tradeForm")
+	let tradeForm = document.getElementById("player-select-1")
 
 	/* 
     Selects UI elements related to stock names and stock price.
@@ -161,6 +164,28 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 	// Event listners
 
+	// Detects change in player trade form 1
+	tradeForm.addEventListener("change", (e) => {
+		console.log(tradeForm.value)
+	})
+
+	// Opens trade modal
+	document.addEventListener("click", (e) => {
+		if (e.target.id === "player-trade-button") {
+			tradeModal.style.display = "block"
+			generateTradeForm()
+		}
+	})
+
+	// Closes trade modal
+	document.addEventListener("click", (e) => {
+		if (e.target.id === "trade-close-button") {
+			tradeModal.style.display = "none"
+			// Resets trade form
+			
+		}
+	})
+
 	// Rolls new prices and increments round counter
 	round_button.addEventListener("click", (e) => {
 		endRound()
@@ -241,7 +266,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		],
 		playerInfo: {
 			player1: {
-				name: "Player 1",
+				name: "Erland",
 				stock1: 0,
 				stock2: 0,
 				stock3: 10,
@@ -249,7 +274,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				cash: 1500,
 			},
 			player2: {
-				name: "Player 2",
+				name: "Nikolai",
 				stock1: 0,
 				stock2: 0,
 				stock3: 0,
@@ -257,7 +282,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				cash: 1500,
 			},
 			player3: {
-				name: "Player 3",
+				name: "Ranok",
 				stock1: 0,
 				stock2: 0,
 				stock3: 0,
@@ -265,7 +290,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				cash: 1500,
 			},
 			player4: {
-				name: "Player 4",
+				name: "Loken",
 				stock1: 0,
 				stock2: 0,
 				stock3: 0,
@@ -275,6 +300,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		},
 		// Initially the same as the rest of game data.
 		previousRounds: []
+	}
+
+	// Creates a select element for each player in the game 
+	let generateTradeForm = () => {
+		// generate options in the player select input
+		for (key in gameInfo.playerInfo) {
+			let option = document.createElement("option")
+			option.value = gameInfo.playerInfo[key].name
+			option.innerText = gameInfo.playerInfo[key].name
+			tradeForm.appendChild(option)
+		}
 	}
 
 	// handles the logic for buying stock

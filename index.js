@@ -8,8 +8,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	let round_button = document.getElementById("end-round")
 	let endModal = document.getElementById("end-modal")
 	let tradeModal = document.getElementById("trade-modal")
-	// let tradeForms = document.getElementsByClassName("tradeForm")
-	let tradeForm = document.getElementById("player-select-1")
+	let tradeForms = document.getElementsByClassName("trade-form")
 
 	/* 
     Selects UI elements related to stock names and stock price.
@@ -164,16 +163,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 	// Event listners
 
-	// Detects change in player trade form 1
-	tradeForm.addEventListener("change", (e) => {
-		console.log(tradeForm.value)
-	})
+	// Detects change in player trade forms
+	for (let i = 0; i < tradeForms.length; i++) {
+		tradeForms[i].addEventListener("change", (e) => {
+			updateTradeModal(e)
+		})
+	}
 
 	// Opens trade modal
 	document.addEventListener("click", (e) => {
 		if (e.target.id === "player-trade-button") {
 			tradeModal.style.display = "block"
-			generateTradeForm()
+			// generateTradeForm()
 		}
 	})
 
@@ -182,7 +183,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		if (e.target.id === "trade-close-button") {
 			tradeModal.style.display = "none"
 			// Resets trade form
-			
+
 		}
 	})
 
@@ -266,7 +267,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		],
 		playerInfo: {
 			player1: {
-				name: "Erland",
+				name: "Amicus",
 				stock1: 0,
 				stock2: 0,
 				stock3: 10,
@@ -302,14 +303,44 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		previousRounds: []
 	}
 
+	// Updates trade modal when a player is selected
+	let updateTradeModal = (e) => {
+		let player = {}
+		let keys = Object.keys(gameInfo.playerInfo.player1).filter(key => key.includes("stock"))
+		console.log(e.target.id)
+		// Find data for the selected player, assign to player
+		for (key in gameInfo.playerInfo) {
+			if (gameInfo.playerInfo[key].name === e.target.value) {
+				player = gameInfo.playerInfo[key]
+			}
+		}
+	}
+
 	// Creates a select element for each player in the game 
 	let generateTradeForm = () => {
 		// generate options in the player select input
-		for (key in gameInfo.playerInfo) {
-			let option = document.createElement("option")
-			option.value = gameInfo.playerInfo[key].name
-			option.innerText = gameInfo.playerInfo[key].name
-			tradeForm.appendChild(option)
+		let formSelects = document.getElementsByClassName("player-select")
+		let stockHoldingsDivs = document.getElementsByClassName("player-holdings")
+
+		// Generates select options
+		for (let i = 0; i < formSelects.length; i++) {
+			for (key in gameInfo.playerInfo) {
+				let option = document.createElement("option")
+				option.value = gameInfo.playerInfo[key].name
+				option.innerText = gameInfo.playerInfo[key].name
+				formSelects[i].appendChild(option)
+			}
+		}
+
+		// Generate player holdings display
+		for (let i = 0; i < stockHoldingsDivs.length; i++) {
+			gameInfo.stockValues.forEach((stock) => {
+				let div = document.createElement("div")
+				div.className = "stock-holding"
+				div.id = `${stock.name}-holding`
+				div.innerText = `${stock.name}: `
+				stockHoldingsDivs[i].appendChild(div)
+			})
 		}
 	}
 
@@ -348,7 +379,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 	let endRound = () => {
 		// // update lastRound and previousRounds.
-		// // Turns out that copying an object into itself is weird.
+		// // Turns out that cloning an object into itself is weird.
 		// gameInfo.lastRound = structuredClone(gameInfo)
 		if (gameInfo.roundCounter === 0) {
 			
@@ -706,14 +737,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		return roll
 	}
 
-	setStockNames(
-		gameInfo.stockValues[0].name,
-		gameInfo.stockValues[1].name,
-		gameInfo.stockValues[2].name,
-		gameInfo.stockValues[3].name
-	)
+	// Eventually this will be used to generate neccesary html based on gameInfo
+	let startGame = () => {
+		// These functions initializes the ui once everything is done loading(hopefully)
+		setStockNames(
+			gameInfo.stockValues[0].name,
+			gameInfo.stockValues[1].name,
+			gameInfo.stockValues[2].name,
+			gameInfo.stockValues[3].name
+		)
+
+		generateTradeForm()
 	
-	// This puts the inital game data in previousRounds
-	gameInfo.previousRounds.push(structuredClone(gameInfo))
-	updateUi()
+		// This puts the inital game data in previousRounds
+		gameInfo.previousRounds.push(structuredClone(gameInfo))
+		updateUi()
+	}
+
+	startGame()
 })

@@ -306,13 +306,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	// Updates trade modal when a player is selected
 	let updateTradeModal = (e) => {
 		let player = {}
+		let holdingsElements = e.target.nextElementSibling.children
 		let keys = Object.keys(gameInfo.playerInfo.player1).filter(key => key.includes("stock"))
-		console.log(e.target.id)
+
 		// Find data for the selected player, assign to player
 		for (key in gameInfo.playerInfo) {
 			if (gameInfo.playerInfo[key].name === e.target.value) {
 				player = gameInfo.playerInfo[key]
 			}
+		}
+
+		// Loop through holdingsElements, using id to update
+		for (let i = 0; i < holdingsElements.length; i++) {
+			let stockName = holdingsElements[i].id.split("-")[0]
+			holdingsElements[i].innerText = stockName + ": " + player[`stock${i + 1}`]
 		}
 	}
 

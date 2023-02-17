@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	// Detects change in player trade forms
 	for (let i = 0; i < tradeForms.length; i++) {
 		tradeForms[i].addEventListener("change", (e) => {
-			updateTradeModal(e)
+			updateTradeModalPlayer(e)
 		})
 	}
 
@@ -304,7 +304,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	}
 
 	// Updates trade modal when a player is selected
-	let updateTradeModal = (e) => {
+	let updateTradeModalPlayer = (e) => {
 		let player = {}
 		let holdingsElements = e.target.nextElementSibling.children
 		let keys = Object.keys(gameInfo.playerInfo.player1).filter(key => key.includes("stock"))
@@ -318,8 +318,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 		// Loop through holdingsElements, using id to update
 		for (let i = 0; i < holdingsElements.length; i++) {
-			let stockName = holdingsElements[i].id.split("-")[0]
-			holdingsElements[i].innerText = stockName + ": " + player[`stock${i + 1}`]
+			let stockName = holdingsElements[i]
+			console.log(holdingsElements[i].children[0])
+			// holdingsElements[i].innerText = stockName + ": " + player[`stock${i + 1}`]
 		}
 	}
 
@@ -343,9 +344,24 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		for (let i = 0; i < stockHoldingsDivs.length; i++) {
 			gameInfo.stockValues.forEach((stock) => {
 				let div = document.createElement("div")
+				let span = document.createElement("span")
+				let buyButton = document.createElement("button")
+				let sellButton = document.createElement("button")
+
 				div.className = "stock-holding"
-				div.id = `${stock.name}-holding`
-				div.innerText = `${stock.name}: `
+				span.id = `${stock.name.toLowerCase()}-holding`
+				span.innerText = `${stock.name}: `
+				buyButton.className = "increase-trade-button"
+				buyButton.id = `${stock.name.toLowerCase()}-increase`
+				sellButton.className = "decrease-trade-button"
+				sellButton.id = `${stock.name.toLowerCase()}-decrease`
+
+				buyButton.innerText = "Increase Offer"
+				sellButton.innerText = "Decrease Offer"
+
+				div.appendChild(span)
+				div.appendChild(buyButton)
+				div.appendChild(sellButton)
 				stockHoldingsDivs[i].appendChild(div)
 			})
 		}

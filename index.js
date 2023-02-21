@@ -308,6 +308,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		let player = {}
 		let holdingsElements = e.target.nextElementSibling.children
 		let keys = Object.keys(gameInfo.playerInfo.player1).filter(key => key.includes("stock"))
+		console.log(holdingsElements[0])
 
 		// Find data for the selected player, assign to player
 		for (key in gameInfo.playerInfo) {
@@ -318,9 +319,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 		// Loop through holdingsElements, using id to update
 		for (let i = 0; i < holdingsElements.length; i++) {
-			let stockName = holdingsElements[i]
-			console.log(holdingsElements[i].children[0])
-			// holdingsElements[i].innerText = stockName + ": " + player[`stock${i + 1}`]
+			let stockName = holdingsElements[i].children[0].id.split("-")[0]
+			holdingsElements[i].children[0].innerText = capitalize(stockName) + ": " + player[`stock${i + 1}`] + " "
 		}
 	}
 
@@ -758,6 +758,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		let roll = Math.floor(Math.random() * (max - min + 1))
 
 		return roll
+	}
+
+	let capitalize = (string) => {
+		let firstLetter = string[0]
+		return string.replace(firstLetter, firstLetter.toUpperCase())
 	}
 
 	// Eventually this will be used to generate neccesary html based on gameInfo

@@ -302,6 +302,7 @@ body {
 
 #trade-modal {
   display: block;
+  position: absolute;
 }
 
 #trade-modal-body {
@@ -344,7 +345,7 @@ body {
   padding: 3px;
   font-size: 20px;
   font-weight: bold;
-  bottom: 15vh;
+  bottom: 15px;
   left: 0vw;
 }
 
@@ -367,6 +368,29 @@ body {
 
 #player-select-2-stocks {
   text-align: right;
+}
+
+#trade-submit {
+  background-color: burlywood;
+}
+
+#trade-submit-button {
+  display: block;
+  position: relative;
+  margin: 0 auto;
+  height: 30px;
+  width: 120px;
+}
+
+#trade-box-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.trade-tracker {
+  background-color: blanchedalmond;
+  margin: 5px;
+  padding: 5px;
 }
 
 #open-modal-button {

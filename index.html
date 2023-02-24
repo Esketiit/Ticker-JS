@@ -179,8 +179,8 @@
   <div class="modal" id="trade-modal">
     <div id="trade-modal-body">
       <div id="trade-box-container">
-        <div class="trade-box">
-          <form class="trade-form" id="trade-form-1">
+        <div class="trade-box" id="trade-box-1">
+          <form action="" class="trade-form" id="trade-form-1">
             <select id="player-select-1" class="player-select">
               <option value="" disabled selected>Select a Player</option>
               <!-- run some js to generate options based on players in the game -->
@@ -190,10 +190,19 @@
             </div>
           </form>
         </div>
-        <div class="trade-box">
+        <div class="trade-box" id="trade-box-2">
+          <div class="trade-tracker" id="trader-1">
+
+          </div>
+          <div class="trade-tracker" id="trade-submit">
+            <button id="trade-submit-button">Process Trade</button>
+          </div>
+          <div class="trade-tracker" id="trader-2">
+
+          </div>
         </div>
-        <div class="trade-box">
-          <form class="trade-form" id="trade-form-1">
+        <div class="trade-box" id="trade-box-3">
+          <form action="" class="trade-form" id="trade-form-2">
             <select id="player-select-2" class="player-select">
               <option value="" disabled selected>Select a Player</option>
               <!-- run some js to generate options based on players in the game -->

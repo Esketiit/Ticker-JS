@@ -303,12 +303,26 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		previousRounds: []
 	}
 
+	// adds a share of a stock to the trade
+	let increaseStockOffer = () => {
+
+	}
+
+	// removes a share of a stock to the trade
+	let decreaseStockOffer = () => {
+
+	}
+
+	// todo: Resets the trade modal
+	let resetTradeModal = () => {
+
+	}
+
 	// Updates trade modal when a player is selected
 	let updateTradeModalPlayer = (e) => {
 		let player = {}
 		let holdingsElements = e.target.nextElementSibling.children
 		let keys = Object.keys(gameInfo.playerInfo.player1).filter(key => key.includes("stock"))
-		console.log(holdingsElements[0])
 
 		// Find data for the selected player, assign to player
 		for (key in gameInfo.playerInfo) {
@@ -319,8 +333,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 		// Loop through holdingsElements, using id to update
 		for (let i = 0; i < holdingsElements.length; i++) {
-			let stockName = holdingsElements[i].children[0].id.split("-")[0]
-			holdingsElements[i].children[0].innerText = capitalize(stockName) + ": " + player[`stock${i + 1}`] + " "
+			// Needed to find a way to get a players cash holding to update
+			if (i === holdingsElements.length - 1) {
+				holdingsElements[i].innerText = `Cash: ${player.cash}`
+			} else {
+				let stockName = holdingsElements[i].children[0].id.split("-")[0]
+				holdingsElements[i].children[0].innerText = capitalize(stockName) + ": " + player[`stock${i + 1}`] + " "
+			}
+			
 		}
 	}
 
@@ -329,6 +349,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		// generate options in the player select input
 		let formSelects = document.getElementsByClassName("player-select")
 		let stockHoldingsDivs = document.getElementsByClassName("player-holdings")
+		let tradeTrackers = document.getElementsByClassName("trade-tracker")
 
 		// Generates select options
 		for (let i = 0; i < formSelects.length; i++) {
@@ -347,14 +368,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				let span = document.createElement("span")
 				let buyButton = document.createElement("button")
 				let sellButton = document.createElement("button")
-
+				
 				div.className = "stock-holding"
 				span.id = `${stock.name.toLowerCase()}-holding`
 				span.innerText = `${stock.name}: `
 				buyButton.className = "increase-trade-button"
 				buyButton.id = `${stock.name.toLowerCase()}-increase`
+				buyButton.type = "button"
 				sellButton.className = "decrease-trade-button"
 				sellButton.id = `${stock.name.toLowerCase()}-decrease`
+				sellButton.type = "button"
 
 				buyButton.innerText = "Increase Offer"
 				sellButton.innerText = "Decrease Offer"
@@ -363,8 +386,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				div.appendChild(buyButton)
 				div.appendChild(sellButton)
 				stockHoldingsDivs[i].appendChild(div)
+				
 			})
+			let cashSpan = document.createElement("span")
+
+			cashSpan.id = "cash-holding"
+			cashSpan.innerText = "Cash: "
+			stockHoldingsDivs[i].appendChild(cashSpan)
 		}
+
+		
+
+
+		// Generate trade tracker (the middle section)
+
 	}
 
 	// handles the logic for buying stock

@@ -277,7 +277,7 @@ body {
 }
 
 /* Close button for end game modal */
-#modal-close-button {
+.modal-close-button {
   position: relative;
   width: 10vw;
   color: black;
@@ -290,7 +290,7 @@ body {
   font-weight: bold;
 }
 
-#modal-close-button:hover {
+.modal-close-button:hover {
   background-color: orangered;
   text-decoration: none;
   cursor: pointer;
@@ -305,94 +305,28 @@ body {
   position: absolute;
 }
 
-#trade-modal-body {
-  display: grid;
-  grid-template-columns: 1fr;
-  background-color: green;
-  /* 15% from the top and centered */
-  margin: 10% auto;
-  padding: 20px;
-  border: 3px solid black;
-  border-radius: 5px;
-  height: 80vh;
-  width: 95vw;
-}
-
-#trade-box-container {
+#trade-form {
   display: grid;
   grid-template-columns: 3fr 3fr 3fr;
-  background-color: yellow;
-}
-
-.trade-box {
-  padding: 10px;
-  margin: 10px;
-  background-color: orangered;
-}
-
-.trader-name {
-  text-align: center;
-}
-
-#trade-close-button {
-  position: absolute;
-  width: 10vw;
-  color: black;
-  background-color: orange;
+  margin: 10% auto;
+  height: 50vh;
+  width: 50vw;
+  background-color: teal;
   border: 3px solid black;
-  border-radius: 5px;
-  margin: auto 45%;
-  padding: 3px;
-  font-size: 20px;
-  font-weight: bold;
-  bottom: 15px;
-  left: 0vw;
+  border-radius: 3px;
+  padding: 5px;
 }
 
-#trade-close-button:hover {
-  background-color: orangered;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-#trade-close-button:active {
-  border-color: white;
-}
-
-.player-holdings {
-  display: grid;
-  grid-template-columns: 1fr;
-  height: 20vh;
-  background-color: bisque;
-}
-
-#player-select-2-stocks {
-  text-align: right;
-}
-
-#trade-submit {
-  background-color: burlywood;
-}
-
-#trade-submit-button {
-  display: block;
-  position: relative;
-  margin: 0 auto;
-  height: 30px;
-  width: 120px;
-}
-
-#trade-box-2 {
-  display: grid;
-  grid-template-columns: 1fr;
-}
-
-.trade-tracker {
-  background-color: blanchedalmond;
+#trade-form>div {
+  border: 2px black solid;
   margin: 5px;
   padding: 5px;
 }
 
-#open-modal-button {
+select {
+  background-color: skyblue;
+}
+
+.open-modal-button {
   display: none;
 }

@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	let round_button = document.getElementById("end-round")
 	let endModal = document.getElementById("end-modal")
 	let tradeModal = document.getElementById("trade-modal")
-	let tradeForms = document.getElementsByClassName("trade-form")
+	let tradeForm = document.getElementById("trade-form")
 
 	/* 
     Selects UI elements related to stock names and stock price.
@@ -162,28 +162,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	}
 
 	// Event listners
+	// There are a lot of click event listeners that check for id.
+	// Would it be better to consolidate them all under one listener?
 
 	// Detects change in player trade forms
-	for (let i = 0; i < tradeForms.length; i++) {
-		tradeForms[i].addEventListener("change", (e) => {
-			updateTradeModalPlayer(e)
-		})
-	}
+	tradeForm.addEventListener("change", (e) => {
+		updateTradeModalPlayer(e)
+	})
+
 
 	// Opens trade modal
 	document.addEventListener("click", (e) => {
 		if (e.target.id === "player-trade-button") {
 			tradeModal.style.display = "block"
 			// generateTradeForm()
-		}
-	})
-
-	// Closes trade modal
-	document.addEventListener("click", (e) => {
-		if (e.target.id === "trade-close-button") {
-			tradeModal.style.display = "none"
-			// Resets trade form
-
 		}
 	})
 
@@ -210,14 +202,21 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		}
 	})
 
+	// The parent element of the close button should be the modal
 	document.addEventListener("click", function(e) {
-		if (e.target.id === "modal-close-button") {
-			endModal.style.display = "none"
+		if (e.target.className === "modal-close-button") {
+			e.target.parentElement.style.display = "none"
+
+			if (e.target.id === "trade-close-button") {
+				tradeModal.style.display = "none"
+				// Resets trade form
+	
+			}
 		}
 	})
 
 	document.addEventListener("click", function(e) {
-		if (e.target.id === "open-modal-button") {
+		if (e.target.className === "open-modal-button") {
 			endModal.style.display = "block"
 		}
 	})
@@ -319,17 +318,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	}
 
 	// Updates trade modal when a player is selected
-	let updateTradeModalPlayer = (e) => {
+	let updateTradeModalPlayer = () => {
 		let player = {}
-		let holdingsElements = e.target.nextElementSibling.children
+		let holdingsElements = document.getElementsByClassName("player-holdings")
 		let keys = Object.keys(gameInfo.playerInfo.player1).filter(key => key.includes("stock"))
 
 		// Find data for the selected player, assign to player
-		for (key in gameInfo.playerInfo) {
-			if (gameInfo.playerInfo[key].name === e.target.value) {
-				player = gameInfo.playerInfo[key]
-			}
-		}
+		// for (key in gameInfo.playerInfo) {
+		// 	if (gameInfo.playerInfo[key].name === e.target.value) {
+		// 		player = gameInfo.playerInfo[key]
+		// 	}
+		// }
 
 		// Loop through holdingsElements, using id to update
 		for (let i = 0; i < holdingsElements.length; i++) {
@@ -340,7 +339,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				let stockName = holdingsElements[i].children[0].id.split("-")[0]
 				holdingsElements[i].children[0].innerText = capitalize(stockName) + ": " + player[`stock${i + 1}`] + " "
 			}
-			
 		}
 	}
 
@@ -379,12 +377,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				sellButton.id = `${stock.name.toLowerCase()}-decrease`
 				sellButton.type = "button"
 
-				buyButton.innerText = "Increase Offer"
-				sellButton.innerText = "Decrease Offer"
+				buyButton.innerText = "+"
+				sellButton.innerText = "-"
 
 				div.appendChild(span)
-				div.appendChild(buyButton)
 				div.appendChild(sellButton)
+				div.appendChild(buyButton)
 				stockHoldingsDivs[i].appendChild(div)
 				
 			})
@@ -459,7 +457,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 	let endGame = () => {
 		// display and enable end screen button
-		let openModalButton = document.getElementById("open-modal-button")
+		let openTradeModalButton = document.getElementsByClassName("open-modal-button")[0]
 		
 		// disable all gameplay buttons 
 		let buttons = document.getElementsByTagName("button")
@@ -483,8 +481,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		
 		updateEndModal()
 		endModal.style.display = "block"
-		openModalButton.style.display = "block"
-		openModalButton.disabled = false
+		openTradeModalButton.style.display = "block"
+		openTradeModalButton.disabled = false
 	}
 
 	// Returns an array of trades a player has done
@@ -622,7 +620,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				roundZeroWinner = gameInfo.previousRounds[0].playerInfo[key]
 			}
 		}
-		console.log(gameInfo.winner, roundZeroWinner)
 		winnerTotalProfits.innerText = `${calculateNetWorth(gameInfo.winner) - calculateNetWorth(roundZeroWinner, gameInfo.previousRounds[0])}`
 
 		// Highest Net Worth

@@ -167,7 +167,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 	// Detects change in player trade forms
 	tradeForm.addEventListener("change", (e) => {
-		updateTradeModalPlayer(e)
+		updateTradeBoxPlayer(e)
 	})
 
 
@@ -215,10 +215,31 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		}
 	})
 
+	// displays end game modal
 	document.addEventListener("click", function(e) {
 		if (e.target.className === "open-modal-button") {
 			endModal.style.display = "block"
 		}
+	})
+
+	// increments and decrements trade offering in trade modal
+	document.addEventListener("click", (e) => {
+		if (e.target.className === "increase-offer-button") {
+			e.target.previousSibling.value++
+			e.target.previousSibling.innerText++
+		} else if (e.target.className === "decrease-offer-button") {
+			e.target.nextSibling.value--
+			e.target.nextSibling.innerText--
+		}
+	})
+
+	// handles trade form submit
+	document.addEventListener("submit", (e) => {
+		e.preventDefault()
+
+		// get info on both sides of the trade
+		console.log(e.target.value)
+		e.target.reset()
 	})
 
 	/* 
@@ -302,23 +323,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		previousRounds: []
 	}
 
-	// adds a share of a stock to the trade
-	let increaseStockOffer = () => {
-
-	}
-
-	// removes a share of a stock to the trade
-	let decreaseStockOffer = () => {
-
-	}
-
 	// todo: Resets the trade modal
 	let resetTradeModal = () => {
 
 	}
 
 	// Updates trade modal when a player is selected
-	let updateTradeModalPlayer = () => {
+	let updateTradeBoxPlayer = (e) => {
 		let player = {}
 		let holdingsElements = document.getElementsByClassName("player-holdings")
 		let keys = Object.keys(gameInfo.playerInfo.player1).filter(key => key.includes("stock"))
@@ -330,16 +341,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		// 	}
 		// }
 
-		// Loop through holdingsElements, using id to update
-		for (let i = 0; i < holdingsElements.length; i++) {
-			// Needed to find a way to get a players cash holding to update
-			if (i === holdingsElements.length - 1) {
-				holdingsElements[i].innerText = `Cash: ${player.cash}`
-			} else {
-				let stockName = holdingsElements[i].children[0].id.split("-")[0]
-				holdingsElements[i].children[0].innerText = capitalize(stockName) + ": " + player[`stock${i + 1}`] + " "
-			}
-		}
+		console.log(e.target)
 	}
 
 	// Creates a select element for each player in the game 
@@ -363,34 +365,45 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		for (let i = 0; i < stockHoldingsDivs.length; i++) {
 			gameInfo.stockValues.forEach((stock) => {
 				let div = document.createElement("div")
-				let span = document.createElement("span")
+				let stockNameSpan = document.createElement("span")
+				let tradeAmountInput = document.createElement("input")
 				let buyButton = document.createElement("button")
 				let sellButton = document.createElement("button")
 				
 				div.className = "stock-holding"
-				span.id = `${stock.name.toLowerCase()}-holding`
-				span.innerText = `${stock.name}: `
-				buyButton.className = "increase-trade-button"
+				stockNameSpan.id = `${stock.name.toLowerCase()}-holding`
+				stockNameSpan.innerText = `${stock.name}: `
+				tradeAmountInput.className = `trade-input`
+				tradeAmountInput.name = `${stock.name}-offer`
+				tradeAmountInput.value = 0
+				tradeAmountInput.innerText = "0"
+				buyButton.className = "increase-offer-button"
 				buyButton.id = `${stock.name.toLowerCase()}-increase`
 				buyButton.type = "button"
-				sellButton.className = "decrease-trade-button"
+				sellButton.className = "decrease-offer-button"
 				sellButton.id = `${stock.name.toLowerCase()}-decrease`
 				sellButton.type = "button"
 
 				buyButton.innerText = "+"
 				sellButton.innerText = "-"
 
-				div.appendChild(span)
+				div.appendChild(stockNameSpan)
 				div.appendChild(sellButton)
+				div.appendChild(tradeAmountInput)
 				div.appendChild(buyButton)
 				stockHoldingsDivs[i].appendChild(div)
 				
 			})
+			let cashDiv = document.createElement("div")
+			let cashInput = document.createElement("input")
 			let cashSpan = document.createElement("span")
 
-			cashSpan.id = "cash-holding"
 			cashSpan.innerText = "Cash: "
-			stockHoldingsDivs[i].appendChild(cashSpan)
+			cashInput.className = "cash-input"
+			cashInput.value = 0
+			cashDiv.appendChild(cashSpan)
+			cashDiv.appendChild(cashInput)
+			stockHoldingsDivs[i].appendChild(cashDiv)
 		}
 
 		

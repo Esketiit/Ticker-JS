@@ -309,8 +309,8 @@ body {
   display: grid;
   grid-template-columns: 3fr 3fr 3fr;
   margin: 10% auto;
-  height: 50vh;
-  width: 50vw;
+  height: 60vh;
+  width: 75vw;
   background-color: teal;
   border: 3px solid black;
   border-radius: 3px;
@@ -325,6 +325,32 @@ body {
 
 select {
   background-color: skyblue;
+}
+
+.increase-offer-button {
+  width: 20px;
+  color: white;
+  background-color: green;
+  border: 2px solid black;
+}
+
+.decrease-offer-button {
+  width: 20px;
+  color: white;
+  background-color: red;
+  border: 2px solid black;
+}
+
+.trade-input {
+  width: 20px;
+  text-align: center;
+  margin: 0px 5px;
+}
+
+.cash-input {
+  width: 60px;
+  text-align: center;
+  margin: 0px 5px;
 }
 
 .open-modal-button {

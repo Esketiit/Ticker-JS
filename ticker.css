@@ -300,6 +300,8 @@ body {
   border-color: white;
 }
 
+/* trade modal */
+
 #trade-modal {
   display: block;
   position: absolute;
@@ -339,6 +341,13 @@ select {
   color: white;
   background-color: red;
   border: 2px solid black;
+}
+
+.stock-name {
+  color: white;
+  background-color: olivedrab;
+  border: 2px solid black;
+  margin: 5px;
 }
 
 .trade-input {

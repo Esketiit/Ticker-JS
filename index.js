@@ -331,25 +331,40 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	// Updates trade modal when a player is selected
 	let updateTradeBoxPlayer = (e) => {
 		let player = {}
-		let holdingsElements = document.getElementsByClassName("player-holdings")
+		let holdingsDiv = e.target.parentElement.lastElementChild
 		let keys = Object.keys(gameInfo.playerInfo.player1).filter(key => key.includes("stock"))
 
 		// Find data for the selected player, assign to player
-		// for (key in gameInfo.playerInfo) {
-		// 	if (gameInfo.playerInfo[key].name === e.target.value) {
-		// 		player = gameInfo.playerInfo[key]
-		// 	}
-		// }
+		for (key in gameInfo.playerInfo) {
+			if (gameInfo.playerInfo[key].name === e.target.value) {
+				player = gameInfo.playerInfo[key]
+			}
+		}
+		
+		// Resets holdings section
+		let first = holdingsDiv.firstElementChild
+		while (first) {
+			first.remove()
+			first = holdingsDiv.firstElementChild
+		}
 
-		console.log(e.target)
+		// Generates player holdings section
+		keys.forEach(key => {
+			let div = document.createElement("div")
+
+			div.className = "holding-name"
+			div.id = key
+			div.innerText = `${key}: ${player[key]}`
+			holdingsDiv.appendChild(div)
+		})
 	}
 
 	// Creates a select element for each player in the game 
 	let generateTradeForm = () => {
 		// generate options in the player select input
 		let formSelects = document.getElementsByClassName("player-select")
-		let stockHoldingsDivs = document.getElementsByClassName("player-holdings")
-		let tradeTrackers = document.getElementsByClassName("trade-tracker")
+		let inputDivs = document.getElementsByClassName("trade-inputs")
+		let holdingsDivs = document.getElementsByClassName("player-holdings")
 
 		// Generates select options
 		for (let i = 0; i < formSelects.length; i++) {
@@ -361,8 +376,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 			}
 		}
 
-		// Generate player holdings display
-		for (let i = 0; i < stockHoldingsDivs.length; i++) {
+		// Generates trade inputs
+		for (let i = 0; i < inputDivs.length; i++) {
 			gameInfo.stockValues.forEach((stock) => {
 				let div = document.createElement("div")
 				let stockNameSpan = document.createElement("span")
@@ -372,7 +387,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				
 				div.className = "stock-holding"
 				stockNameSpan.id = `${stock.name.toLowerCase()}-holding`
-				stockNameSpan.innerText = `${stock.name}: `
+				stockNameSpan.className = "stock-name"
+				stockNameSpan.innerText = `${stock.name}:`
 				tradeAmountInput.className = `trade-input`
 				tradeAmountInput.name = `${stock.name}-offer`
 				tradeAmountInput.value = 0
@@ -391,26 +407,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				div.appendChild(sellButton)
 				div.appendChild(tradeAmountInput)
 				div.appendChild(buyButton)
-				stockHoldingsDivs[i].appendChild(div)
-				
+				inputDivs[i].appendChild(div)
 			})
+
+			// Adds cash inputs
 			let cashDiv = document.createElement("div")
 			let cashInput = document.createElement("input")
 			let cashSpan = document.createElement("span")
 
 			cashSpan.innerText = "Cash: "
+			cashSpan.className = "stock-name"
 			cashInput.className = "cash-input"
 			cashInput.value = 0
 			cashDiv.appendChild(cashSpan)
 			cashDiv.appendChild(cashInput)
-			stockHoldingsDivs[i].appendChild(cashDiv)
+			inputDivs[i].appendChild(cashDiv)
 		}
-
-		
-
-
-		// Generate trade tracker (the middle section)
-
 	}
 
 	// handles the logic for buying stock

@@ -206,12 +206,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	document.addEventListener("click", function(e) {
 		if (e.target.className === "modal-close-button") {
 			e.target.parentElement.style.display = "none"
+		}
+	})
 
-			if (e.target.id === "trade-close-button") {
-				tradeModal.style.display = "none"
-				// Resets trade form
-	
-			}
+	// Closes and resets trade form
+	document.addEventListener("click", (e) => {
+		if (e.target.id === "trade-close-button") {
+			tradeModal.style.display = "none"
+			tradeForm.reset()
 		}
 	})
 
@@ -222,7 +224,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		}
 	})
 
-	// increments and decrements trade offering in trade modal
+	// changes trade offering in trade modal
 	document.addEventListener("click", (e) => {
 		if (e.target.className === "increase-offer-button") {
 			e.target.previousSibling.value++
@@ -238,7 +240,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		e.preventDefault()
 
 		// get info on both sides of the trade
-		console.log(e.target.value)
+		console.log(e.target)
 		e.target.reset()
 	})
 

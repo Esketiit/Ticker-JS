@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		e.preventDefault()
 
 		// get info on both sides of the trade
-		console.log(e.target)
+		handleTradeSubmit(e)
 		e.target.reset()
 	})
 
@@ -325,6 +325,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		previousRounds: []
 	}
 
+	let handleTradeSubmit = (e) => {
+		let tradeBoxes = document.getElementsByClassName("trade-box")
+
+		console.log(tradeBoxes)
+	}
+
 	// todo: Resets the trade modal
 	let resetTradeModal = () => {
 
@@ -392,7 +398,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				stockNameSpan.className = "stock-name"
 				stockNameSpan.innerText = `${stock.name}:`
 				tradeAmountInput.className = `trade-input`
-				tradeAmountInput.name = `${stock.name}-offer`
+				tradeAmountInput.id = `${stock.name.toLowerCase()}-input`
 				tradeAmountInput.value = 0
 				tradeAmountInput.innerText = "0"
 				buyButton.className = "increase-offer-button"

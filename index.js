@@ -326,12 +326,21 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	}
 
 	let handleTradeSubmit = (e) => {
-		let tradeBoxes = document.getElementsByClassName("trade-box")
+		let tradeInputs = document.getElementsByClassName("trade-input")
+		let tradeOffers = []
+		
+		// check if all info in the form is correct
+		for (let i = 0; i < tradeInputs.length; i++) {
+			console.log(tradeInputs.)
+		}
 
-		console.log(tradeBoxes)
+		// update player info based on info in the trade form
+		
+
+		// create trade objects based on form info then add them to gameinfo
 	}
 
-	// todo: Resets the trade modal
+	// todo: Resets the trade modall
 	let resetTradeModal = () => {
 
 	}
@@ -398,7 +407,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 				stockNameSpan.className = "stock-name"
 				stockNameSpan.innerText = `${stock.name}:`
 				tradeAmountInput.className = `trade-input`
-				tradeAmountInput.id = `${stock.name.toLowerCase()}-input`
+				tradeAmountInput.id = `${stock.name.toLowerCase()}-input-${i+1}`
 				tradeAmountInput.value = 0
 				tradeAmountInput.innerText = "0"
 				buyButton.className = "increase-offer-button"

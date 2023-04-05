@@ -1,6 +1,6 @@
 /* * is a universal selector, it selects every element. Since different browsers
   use different default margins, setting all margins and paddings to zero makes 
-  things more consistent. This is called a reset. */
+  things more consistent. This is called a reset. Might not need it here though. */
 * {
   box-sizing: border-box;
   padding: 0;
